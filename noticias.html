@@ -1,784 +1,916 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<!-- CÓDIGO DEL BOTÓN FLOTANTE ATRÁS -->
-<style>
-  /* Botón Flotante Neón */
-  .btn-float-inicio {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 99999;
-    background: #0c102b;
-    color: #00ffcc;
-    border: 2px solid #00ffcc;
-    border-radius: 50px;
-    padding: 8px 16px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-decoration: none;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias - Spotters Spain</title>
+
+  <!-- Librería Integrada Supabase JS -->
+  <script>
+  var supabase=(function(e){function t(e,t){var n={};for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&t.indexOf(r)<0&&(n[r]=e[r]);if(e!=null&&typeof Object.getOwnPropertySymbols==`function`)for(var i=0,r=Object.getOwnPropertySymbols(e);i<r.length;i++)t.indexOf(r[i])<0&&Object.prototype.propertyIsEnumerable.call(e,r[i])&&(n[r[i]]=e[r[i]]);return n}function n(e,t,n,r){function i(e){return e instanceof n?e:new n(function(t){t(e)})}return new(n||=Promise)(function(n,a){function o(e){try{c(r.next(e))}catch(e){a(e)}}function s(e){try{c(r.throw(e))}catch(e){a(e)}}function c(e){e.done?n(e.value):i(e.value).then(o,s)}c((r=r.apply(e,t||[])).next())})}let r=e=>e?(...t)=>e(...t):(...e)=>fetch(...e);var i=class extends Error{constructor(e,t=`FunctionsError`,n){super(e),this.name=t,this.context=n}toJSON(){return{name:this.name,message:this.message,context:this.context}}},a=class extends i{constructor(e){super(`Failed to send a request to the Edge Function`,`FunctionsFetchError`,e)}},o=class extends i{constructor(e){super(`Relay Error invoking the Edge Function`,`FunctionsRelayError`,e)}},s=class extends i{constructor(e){super(`Edge Function returned a non-2xx status code`,`FunctionsHttpError`,e)}},c;(function(e){e.Any=`any`,e.ApNortheast1=`ap-northeast-1`,e.ApNortheast2=`ap-northeast-2`,e.ApSouth1=`ap-south-1`,e.ApSoutheast1=`ap-southeast-1`,e.ApSoutheast2=`ap-southeast-2`,e.CaCentral1=`ca-central-1`,e.EuCentral1=`eu-central-1`,e.EuWest1=`eu-west-1`,e.EuWest2=`eu-west-2`,e.EuWest3=`eu-west-3`,e.SaEast1=`sa-east-1`,e.UsEast1=`us-east-1`,e.UsWest1=`us-west-1`,e.UsWest2=`us-west-2`})(c||={});var l=class{constructor(e,{headers:t={},customFetch:n,region:i=c.Any}={}){this.url=e,this.headers=t,this.region=i,this.fetch=r(n)}setAuth(e){this.headers.Authorization=`Bearer ${e}`}invoke(e){return n(this,arguments,void 0,function*(e,t={}){var n;let r,i,c;try{let{headers:n,method:l,body:u,signal:d,timeout:f}=t,p={},{region:m}=t;m||=this.region;let h=new URL(`${this.url}/${e}`);m&&m!==`any`&&(p[`x-region`]=m,h.searchParams.set(`forceFunctionRegion`,m));let g,ee=!!n&&Object.keys(n).some(e=>e.toLowerCase()===`content-type`);u&&!ee?typeof Blob<`u`&&u instanceof Blob||u instanceof ArrayBuffer?(p[`Content-Type`]=u.type||`application/octet-stream`,g=u):typeof u==`string`?(p[`Content-Type`]=`text/plain`,g=u):typeof FormData<`u`&&u instanceof FormData?g=u:(p[`Content-Type`]=`application/json`,g=JSON.stringify(u)):g=u&&typeof u!=`string`&&!(typeof Blob<`u`&&u instanceof Blob)&&!(u instanceof ArrayBuffer)&&!(typeof FormData<`u`&&u instanceof FormData)?JSON.stringify(u):u;let te=d;f&&(i=new AbortController,r=setTimeout(()=>i.abort(),f),d?(te=i.signal,c=()=>i.abort(),d.addEventListener(`abort`,c)):te=i.signal);let _=yield this.fetch(h.toString(),{method:l||`POST`,headers:Object.assign(Object.assign(Object.assign({},p),this.headers),n),body:g,signal:te}).catch(e=>{throw new a(e)}),ne=_.headers.get(`x-relay-error`);if(ne&&ne===`true`)throw new o(_);if(!_.ok)throw new s(_);let re=(_.headers.get(`Content-Type`)??`text/plain`).split(`;`)[0].trim().toLowerCase(),ie;return ie=re===`application/json`?yield _.json():re===`application/octet-stream`||re===`application/pdf`?yield _.blob():re===`text/event-stream`?_:re===`multipart/form-data`?yield _.formData():yield _.text(),{data:ie,error:null,response:_}}catch(e){return{data:null,error:e,response:e instanceof s||e instanceof o?e.context:void 0}}finally{r&&clearTimeout(r),c&&((n=t.signal)==null||n.removeEventListener(`abort`,c))}})}},u=class extends Error{constructor(e){super(e.message),this.name=`PostgrestError`,this.details=e.details,this.hint=e.hint,this.code=e.code}toJSON(){return{name:this.name,message:this.message,details:this.details,hint:this.hint,code:this.code}}};let d=e=>Math.min(1e3*2**e,3e4),f=[520,503],p=[`GET`,`HEAD`,`OPTIONS`];function m(e){return m=typeof Symbol==`function`&&typeof Symbol.iterator==`symbol`?function(e){return typeof e}:function(e){return e&&typeof Symbol==`function`&&e.constructor===Symbol&&e!==Symbol.prototype?`symbol`:typeof e},m(e)}function h(e,t){if(m(e)!=`object`||!e)return e;var n=e[Symbol.toPrimitive];if(n!==void 0){var r=n.call(e,t||`default`);if(m(r)!=`object`)return r;throw TypeError(`@@toPrimitive must return a primitive value.`)}return(t===`string`?String:Number)(e)}function g(e){var t=h(e,`string`);return m(t)==`symbol`?t:t+``}function ee(e,t,n){return(t=g(t))in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function te(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function _(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]==null?{}:arguments[t];t%2?te(Object(n),!0).forEach(function(t){ee(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):te(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}function ne(e,t){return new Promise(n=>{if(t?.aborted){n();return}let r=setTimeout(()=>{t?.removeEventListener(`abort`,i),n()},e);function i(){clearTimeout(r),n()}t?.addEventListener(`abort`,i)})}function re(e,t,n,r){return!(!r||n>=3||!p.includes(e)||!f.includes(t))}async function ie(e,t,n,r){let i=0;for(;;){let a=_({},n.headers);i>0&&(a[`X-Retry-Count`]=String(i));let o;try{o=await e(t,{method:n.method,headers:a,body:n.body,signal:n.signal})}catch(e){if(e?.name===`AbortError`||e?.code===`ABORT_ERR`||e?.name===`TimeoutError`&&n.signal?.aborted||!p.includes(n.method))throw e;if(r&&i<3){let e=d(i);i++,await ne(e,n.signal);continue}throw e}if(re(n.method,o.status,i,r)){let e=o.headers?.get(`Retry-After`)??null,t=e===null?d(i):Math.max(0,parseInt(e,10)||0)*1e3;await o.text(),i++,await ne(t,n.signal);continue}return o}}var ae=class{constructor(e){this.shouldThrowOnError=!1,this.retryEnabled=!0,this.method=e.method,this.url=e.url,this.headers=new Headers(e.headers),this.schema=e.schema,this.body=e.body,this.shouldThrowOnError=e.shouldThrowOnError??!1,this.signal=e.signal,this.isMaybeSingle=e.isMaybeSingle??!1,this.shouldStripNulls=e.shouldStripNulls??!1,this.urlLengthLimit=e.urlLengthLimit??8e3,this.retryEnabled=e.retry??!0,e.fetch?this.fetch=e.fetch:this.fetch=fetch}throwOnError(){return this.shouldThrowOnError=!0,this}stripNulls(){if(this.headers.get(`Accept`)===`text/csv`)throw Error(`stripNulls() cannot be used with csv()`);return this.shouldStripNulls=!0,this}setHeader(e,t){return this.headers=new Headers(this.headers),this.headers.set(e,t),this}retry(e){return this.retryEnabled=e,this}then(e,t){var n=this;if(this.schema===void 0||([`GET`,`HEAD`].includes(this.method)?this.headers.set(`Accept-Profile`,this.schema):this.headers.set(`Content-Profile`,this.schema)),this.method!==`GET`&&this.method!==`HEAD`&&this.headers.set(`Content-Type`,`application/json`),this.shouldStripNulls){let e=this.headers.get(`Accept`);e===`application/vnd.pgrst.object+json`?this.headers.set(`Accept`,`application/vnd.pgrst.object+json;nulls=stripped`):(!e||e===`application/json`)&&this.headers.set(`Accept`,`application/vnd.pgrst.array+json;nulls=stripped`)}let r=this.fetch,i=(async()=>{let e={};n.headers.forEach((t,n)=>{e[n]=t});let t=await ie(r,n.url.toString(),{method:n.method,headers:e,body:JSON.stringify(n.body,(e,t)=>typeof t==`bigint`?t.toString():t),signal:n.signal},n.retryEnabled);return await n.processResponse(t)})();return this.shouldThrowOnError||(i=i.catch(e=>{let t=``,n=``,r=``,i=e?.cause;if(i){let n=i?.message??``,r=i?.code??``;t=`${e?.name??`FetchError`}: ${e?.message}`,t+=`\n\nCaused by: ${i?.name??`Error`}: ${n}`,r&&(t+=` (${r})`),i?.stack&&(t+=`\n${i.stack}`)}else t=e?.stack??``;let a=this.url.toString().length;return e?.name===`AbortError`||e?.code===`ABORT_ERR`?(r=``,n=`Request was aborted (timeout or manual cancellation)`,a>this.urlLengthLimit&&(n+=`. Note: Your request URL is ${a} characters, which may exceed server limits.`)):(i?.name===`HeadersOverflowError`||i?.code===`UND_ERR_HEADERS_OVERFLOW`)&&(r=``,n=`HTTP headers exceeded server limits`),{success:!1,error:{message:`${e?.name??`FetchError`}: ${e?.message}`,details:t,hint:n,code:r},data:null,count:null,status:0,statusText:``}})),i.then(e,t)}async processResponse(e){var t=this;let n=null,r=null,i=null,a=e.status,o=e.statusText;if(e.ok){if(t.method!==`HEAD`){let i=await e.text();if(i!==``)if(t.headers.get(`Accept`)===`text/csv`)r=i;else try{r=JSON.parse(i)}catch{if(n={message:i},r=null,t.shouldThrowOnError)throw new u({message:i,details:``,hint:``,code:``})}}let s=t.headers.get(`Prefer`)?.match(/count=(exact|planned|estimated)/),c=e.headers.get(`content-range`)?.split(`/`);if(s&&c&&c.length>1&&(i=parseInt(c[1])),t.isMaybeSingle&&Array.isArray(r))if(r.length>1){if(n={code:`PGRST116`,details:`Results contain ${r.length} rows`,hint:null,message:`JSON object requested, multiple rows returned`},r=null,i=null,a=406,o=`Not Acceptable`,t.shouldThrowOnError)throw new u(_(_({},n),{},{hint:n.hint??``}))}else r=r.length===1?r[0]:null}else{let i=await e.text();try{n=JSON.parse(i),Array.isArray(n)&&e.status===404&&(r=[],n=null,a=200,o=`OK`)}catch{e.status===404&&i===``?(a=204,o=`No Content`):n={message:i}}if(n&&t.shouldThrowOnError)throw new u(n)}return{success:n===null,error:n,data:r,count:i,status:a,statusText:0}}returns(){return this}overrideTypes(){return this}},oe=class extends ae{throwOnError(){return super.throwOnError()}select(e){let t=!1,n=(e??`*`).split(``).map(e=>/\s/.test(e)&&!t?``:(e===`"`&&(t=!t),e)).join(``);return this.url.searchParams.set(`select`,n),this.headers.append(`Prefer`,`return=representation`),this}order(e,{ascending:t=!0,nullsFirst:n,foreignTable:r,referencedTable:i=r}={}){let a=i?`${i}.order`:`order`,o=this.url.searchParams.get(a);return this.url.searchParams.set(a,`${o?`${o},`:``}${e}.${t?`asc`:`desc`}${n===void 0?``:n?`.nullsfirst`:`.nullslast`}`),this}limit(e,{foreignTable:t,referencedTable:n=t}={}){let r=n===void 0?`limit`:`${n}.limit`;return this.url.searchParams.set(r,`${e}`),this}range(e,t,{foreignTable:n,referencedTable:r=n}={}){let i=r===void 0?`offset`:`${r}.offset`,a=r===void 0?`limit`:`${r}.limit`;return this.url.searchParams.set(i,`${e}`),this.url.searchParams.set(a,`${t-e+1}`),this}abortSignal(e){return this.signal=e,this}single(){return this.headers.set(`Accept`,`application/vnd.pgrst.object+json`),this}maybeSingle(){return this.isMaybeSingle=!0,this}};let se=RegExp(`[,()]`);var ce=class extends oe{throwOnError(){return super.throwOnError()}eq(e,t){return this.url.searchParams.append(e,`eq.${t}`),this}neq(e,t){return this.url.searchParams.append(e,`neq.${t}`),this}gt(e,t){return this.url.searchParams.append(e,`gt.${t}`),this}gte(e,t){return this.url.searchParams.append(e,`gte.${t}`),this}lt(e,t){return this.url.searchParams.append(e,`lt.${t}`),this}lte(e,t){return this.url.searchParams.append(e,`lte.${t}`),this}filter(e,t,n){return this.url.searchParams.append(e,`${t}.${n}`),this}},le=class{constructor(e,{headers:t={},schema:n,fetch:r,urlLengthLimit:i=8e3,retry:a}){this.url=e,this.headers=new Headers(t),this.schema=n,this.fetch=r,this.urlLengthLimit=i,this.retry=a}cloneRequestState(){return{url:new URL(this.url.toString()),headers:new Headers(this.headers)}}select(e,t){let{head:n=!1,count:r}=t??{},i=n?`HEAD`:`GET`,a=!1,o=(e??`*`).split(``).map(e=>/\s/.test(e)&&!a?``:(e===`"`&&(a=!a),e)).join(``),{url:s,headers:c}=this.cloneRequestState();return s.searchParams.set(`select`,o),r&&c.append(`Prefer`,`count=${r}`),new ce({method:i,url:s,headers:c,schema:this.schema,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}insert(e,{count:t,defaultToNull:n=!0}={}){let{url:r,headers:i}=this.cloneRequestState();if(t&&i.append(`Prefer`,`count=${t}`),n||i.append(`Prefer`,`missing=default`),Array.isArray(e)){let t=e.reduce((e,t)=>e.concat(Object.keys(t)),[]);if(t.length>0){let e=[...new Set(t)].map(e=>`"${e}"`);r.searchParams.set(`columns`,e.join(`,`))}}return new ce({method:`POST`,url:r,headers:i,schema:this.schema,body:e,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}delete({count:e}={}){let{url:t,headers:n}=this.cloneRequestState();return e&&n.append(`Prefer`,`count=${e}`),new ce({method:`DELETE`,url:t,headers:n,schema:this.schema,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}};var fe=class e{constructor(e,{headers:t={},schema:n,fetch:r,timeout:i,urlLengthLimit:a=8e3,retry:o}={}){this.url=e,this.headers=new Headers(t),this.schemaName=n,this.urlLengthLimit=a,this.fetch=r??globalThis.fetch,this.retry=o}from(e){return new le(new URL(`${this.url}/${e}`),{headers:new Headers(this.headers),schema:this.schemaName,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}};
+  var Qi=class{constructor(e,t,n){let r=new URL(e);this.supabaseUrl=e,this.supabaseKey=t,this.rest=new fe(new URL(`rest/v1`,r).href,{headers:{"apikey":t,"Authorization":`Bearer ${t}`},fetch:(u,o={})=>{let s=JSON.parse(localStorage.getItem(`sb_session`)||`null`),h=new Headers(o.headers||{});h.set("apikey",t);h.set("Authorization",`Bearer ${s?.access_token||t}`);return fetch(u,{...o,headers:h})}}),this.storage={from:b=>({getPublicUrl:p=>({data:{publicUrl:`${e}/storage/v1/object/public/${b}/${p}`}}),upload:async(p,f,o)=>{let s=JSON.parse(localStorage.getItem(`sb_session`)||`null`),h={"apikey":t,"Authorization":`Bearer ${s?.access_token||t}`,"Content-Type":f.type||`application/octet-stream`};let res=await fetch(`${e}/storage/v1/object/${b}/${p}`,{method:`POST`,headers:h,body:f}),raw=await res.text(),data=null;try{data=raw?JSON.parse(raw):null}catch{data={message:raw}}return{data:res.ok?data:null,error:res.ok?null:Object.assign(new Error(String(data?.message||data?.error||`Error al subir imagen (HTTP ${res.status})`)),{statusCode:res.status,details:data})}},remove:async(arr)=>{let s=JSON.parse(localStorage.getItem(`sb_session`)||`null`),h={"apikey":t,"Authorization":`Bearer ${s?.access_token||t}`,"Content-Type":`application/json`};let res=await fetch(`${e}/storage/v1/object/${b}`,{method:`DELETE`,headers:h,body:JSON.stringify({prefixes:arr})});return{data:res.ok?await res.json():null,error:res.ok?null:new Error(`Error al eliminar`)}}})},this.auth={getSession:async()=>({data:{session:JSON.parse(localStorage.getItem(`sb_session`)||`null`)}}),signInWithPassword:async({email:em,password:pw})=>{let h={"apikey":t,"Content-Type":`application/json`};let res=await fetch(`${e}/auth/v1/token?grant_type=password`,{method:`POST`,headers:h,body:JSON.stringify({email:em,password:pw})});let data=await res.json();if(res.ok&&data.access_token){let sess={access_token:data.access_token,user:data.user};localStorage.setItem(`sb_session`,JSON.stringify(sess));if(this._authCb)this._authCb(`SIGNED_IN`,sess);return{data:{session:sess},error:null}}return{data:{session:null},error:new Error(data.error_description||data.msg||`Error de autenticación`)}},signOut:async()=>{localStorage.removeItem(`sb_session`);if(this._authCb)this._authCb(`SIGNED_OUT`,null);return{error:null}},onAuthStateChange:(cb)=>{this._authCb=cb;return{data:{subscription:{unsubscribe:()=>{this._authCb=null}}}}}},this.functions={invoke:async(fn,{body:b})=>{let sess=JSON.parse(localStorage.getItem(`sb_session`)||`null`);let h={"apikey":t,"Authorization":`Bearer ${sess?.access_token||t}`,"Content-Type":`application/json`};let res=await fetch(`${e}/functions/v1/${fn}`,{method:`POST`,headers:h,body:JSON.stringify(b)});let d=await res.json();return{data:d,error:res.ok?null:new Error(d.error||`Error de servidor`)}}} }from(e){return this.rest.from(e)}};
+  return{createClient:(e,t,n)=>new Qi(e,t,n)};
+  })({});
+  </script>
+
+  <style>
+  :root{
+    color-scheme: dark;
+    --bg: #030712;
+    --panel: rgba(11, 20, 42, 0.72);
+    --cyan: #00f3ff;
+    --green: #00ff9d;
+    --text: #f0f6fc;
+    --muted: #8b9bb4;
+    --line: rgba(0, 243, 255, 0.16);
+    font-family: Inter, Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  *{
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body{
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 0%, rgba(0,243,255,0.06), transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(0,255,157,0.04), transparent 40%),
+                linear-gradient(rgba(0,243,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,243,255,0.02) 1px, transparent 1px),
+                var(--bg);
+    background-size: auto, auto, 20px 20px, 20px 20px, auto;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* HEADER COMPACTO MOBILE-FIRST */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 52px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+    background: rgba(3, 7, 18, 0.9);
+    backdrop-filter: blur(14px);
+  }
+
+  .brand{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-dot{
+    width: 8px;
+    height: 8px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--cyan);
+  }
+  .brand-title{
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 0 12px rgba(0, 255, 204, 0.4), inset 0 0 8px rgba(0, 255, 204, 0.2);
+    color: #fff;
+    line-height: 1;
+  }
+  .brand-sub{
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    background: rgba(0, 243, 255, 0.08);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 243, 255, 0.15);
+  }
+
+  main{
+    width: min(1000px, 100%);
+    margin: 0 auto;
+    padding: 8px 8px 24px;
+    flex: 1;
+  }
+
+  .section-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0;
+  }
+
+  h2.section-title{
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cyan);
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: all 0.3s ease;
   }
 
-  /* Efecto al pasar el cursor / tocar */
-  .btn-float-inicio:hover, .btn-float-inicio:active {
-    background: #00ffcc;
-    color: #050814;
-    box-shadow: 0 0 20px rgba(0, 255, 204, 0.9);
-    transform: scale(1.08) translateY(-2px);
+  /* BOTONES Y CAMPOS ULTRA-ERGONÓMICOS */
+  button, .btn{
+    border: 1px solid rgba(0,243,255,0.3);
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(0,243,255,0.85), rgba(0,255,157,0.85));
+    color: #020c14;
+    padding: 5px 10px;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0,243,255,0.15);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    touch-action: manipulation;
   }
-</style>
+  button:active{
+    transform: scale(0.97);
+  }
+  button.secondary{
+    background: rgba(0, 243, 255, 0.06);
+    color: var(--cyan);
+    border-color: rgba(0, 243, 255, 0.22);
+    box-shadow: none;
+    font-weight: 600;
+  }
+  button.secondary:hover, button.secondary:active{
+    background: rgba(0, 243, 255, 0.14);
+    color: var(--green);
+    border-color: rgba(0, 255, 157, 0.35);
+  }
 
-<!-- Botón Flotante para volver a la página anterior -->
-<a href="#" class="btn-float-inicio" onclick="history.back(); return false;">
-  <i class="fa-solid fa-arrow-left"></i> Atrás
-</a>
+  button.danger{background:rgba(255,70,100,0.12);color:#ff7890;border-color:rgba(255,70,100,0.4);box-shadow:none}
+  button.danger:hover{background:rgba(255,70,100,0.22)}
+  input, textarea, select{
+    width: 100%;
+    border: 1px solid rgba(0,243,255,0.22);
+    border-radius: 6px;
+    background: rgba(3, 7, 18, 0.82);
+    color: #fff;
+    padding: 6px 10px;
+    font: inherit;
+    font-size: 0.8rem;
+    transition: border-color 0.2s;
+  }
+  input[type="date"]{
+    padding: 4px 8px;
+    font-size: 0.78rem;
+    color-scheme: dark;
+  }
+  input:focus, textarea:focus, select:focus{
+    border-color: var(--cyan);
+    box-shadow: 0 0 8px rgba(0,243,255,0.25);
+    outline: none;
+  }
 
+  label{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #b8cbdc;
+    font-size: 0.75rem;
+  }
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Spotters Spain · Noticias de Aviación en Castellano</title>
-  <!-- Iconos de FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    /* RESETEO & VARIABLES NEÓN */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+  /* ESTILO PARA ENLACES A REDES SOCIALES Y WEBS */
+  .news-link{
+    color: #00f3ff !important;
+    text-decoration: underline;
+    font-weight: 600;
+    word-break: break-word;
+  }
+  .news-link:hover{
+    color: #00ff9d !important;
+  }
+
+  /* MÓDULO DESPLEGABLE DE FILTROS */
+  .filter-wrapper{
+    display: none;
+    background: rgba(8, 14, 30, 0.85);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 10px;
+    backdrop-filter: blur(8px);
+  }
+
+  .filter-wrapper.open{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .filter-wrapper label{
+    flex: 1 1 120px;
+  }
+
+  .filter-actions{
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+  }
+  @media (min-width: 600px){
+    .filter-actions{
+      width: auto;
+      margin-top: 0;
     }
+  }
+  .filter-actions button{
+    flex: 1;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
 
-    :root {
-      --bg-color: #050814;
-      --card-bg: linear-gradient(145deg, #0c102b, #070a1a);
-      --neon-cyan: #00d2ff;
-      --neon-green: #00ffcc;
-      --neon-red: #ff0055;
-    }
+  /* PANEL DE CONTROL / LOGIN */
+  .panel{
+    margin: 8px 0 12px;
+    padding: 12px;
+    border: 1px solid rgba(0,243,255,0.2);
+    border-radius: 8px;
+    background: var(--panel);
+    backdrop-filter: blur(10px);
+  }
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-color);
-      color: #ffffff;
-      min-height: 100vh;
-      padding: 12px 10px 70px 10px;
-    }
+  /* ESTRUCTURA ULTRA-COMPACTA HORIZONTAL DE NOTICIAS */
+  .grid{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
+  @media (min-width: 600px){
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+      gap: 10px;
     }
+  }
 
-    /* ENCABEZADO */
-    header {
-      background: var(--card-bg);
-      border: 2px solid var(--neon-cyan);
-      border-radius: 16px;
-      padding: 16px 14px;
-      text-align: center;
-      margin-bottom: 16px;
-      box-shadow: 0 0 15px rgba(0, 210, 255, 0.2), inset 0 0 15px rgba(0, 210, 255, 0.1);
-    }
+  .card{
+    border: 1px solid rgba(0,243,255,0.18);
+    border-radius: 8px;
+    background: linear-gradient(150deg, rgba(11,20,42,0.85), rgba(4,8,20,0.92));
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    padding: 6px;
+    height: 100px;
+  }
 
-    h1 {
-      font-size: 1.3rem;
-      color: var(--neon-cyan);
-      text-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
+  .card img{
+    width: 85px;
+    height: 85px;
+    min-width: 85px;
+    object-fit: cover;
+    background: #080f24;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
 
-    .subtitle {
-      color: var(--neon-green);
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
-    }
+  .inside{
+    padding: 2px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+  }
 
-    .status {
-      margin-top: 10px;
-      font-size: 0.72rem;
-      color: #88a0c0;
-    }
+  .inside-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    /* CONTENEDOR DE FILTROS */
-    .filter-group {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-    }
+  .inside h2{
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 2px 0 3px;
+    color: #fff;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-    .filter-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-    }
+  .inside p{
+    font-size: 0.7rem;
+    color: #abbccf;
+    margin: 0;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-    .filter-box label {
-      font-size: 0.75rem;
-      color: #88a0c0;
-      font-weight: 700;
-      min-width: 90px;
-      text-align: right;
-    }
+  .inside-footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
 
-    .date-select {
-      background: #030611;
-      color: var(--neon-cyan);
-      border: 1.5px solid var(--neon-cyan);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      outline: none;
-      box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
-      cursor: pointer;
-      max-width: 250px;
-      width: 100%;
-    }
+  .inside button{
+    padding: 3px 8px;
+    font-size: 0.68rem;
+  }
 
-    /* BOTÓN REFRESCAR NEÓN */
-    button#btn {
-      background: var(--neon-cyan);
-      color: #050814;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.8rem;
-      margin-top: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 0 12px var(--neon-cyan);
-      transition: all 0.25s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+  .muted{ color: var(--muted); font-size: 0.68rem; }
+  .msg{ min-height: 1em; margin: 4px 0; font-size: 0.75rem; color: var(--muted); }
+  .err{ color: #ff6682; }
+  .ok{ color: var(--green); }
+  .hide, .hidden{ display: none !important; }
 
-    button#btn:hover {
-      background: var(--neon-green);
-      box-shadow: 0 0 18px var(--neon-green);
-      transform: scale(1.03);
-    }
+  /* MODAL CON ANÁLISIS DE IMPACTO DE TEXTO */
+  .modal{
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 10px;
+    background: rgba(1, 4, 12, 0.88);
+    backdrop-filter: blur(12px);
+  }
 
-    button#btn:disabled {
-      background: #334155;
-      color: #64748b;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
+  .modal>article{
+    width: min(650px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 14px;
+    border: 1px solid var(--cyan);
+    border-radius: 10px;
+    background: linear-gradient(145deg, #0b142a, #030712);
+    box-shadow: 0 0 28px rgba(0,243,255,0.2);
+  }
 
-    /* LISTA DE NOTICIAS */
-    .list {
-      list-style: none;
-    }
+  .modal img{
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    margin: 8px 0;
+    border-radius: 6px;
+    background: #02050e;
+  }
 
-    .list li {
-      background: var(--card-bg);
-      border: 1.5px solid var(--neon-cyan);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-      box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
-      transition: all 0.3s ease;
-    }
+  .modal p{
+    white-space: pre-wrap;
+    line-height: 1.5;
+    font-size: 0.82rem;
+    color: #d7e4f2;
+  }
 
-    .list li:hover {
-      border-color: var(--neon-green);
-      box-shadow: 0 0 18px rgba(0, 255, 204, 0.35);
-    }
+  /* CAJA DE ANÁLISIS EN MODAL */
+  .analysis-box{
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    background: rgba(3, 7, 18, 0.85);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .analysis-section{
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+  }
+  .analysis-pos{
+    background: rgba(0, 255, 157, 0.08);
+    border-left: 3px solid var(--green);
+    color: #a3ffd6;
+  }
+  .analysis-neg{
+    background: rgba(255, 70, 100, 0.08);
+    border-left: 3px solid #ff4664;
+    color: #ffb3c0;
+  }
 
-    .source-badge-box {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .source {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--neon-green);
-      background: rgba(0, 255, 204, 0.1);
-      border: 1px solid var(--neon-green);
-      padding: 2px 8px;
-      border-radius: 4px;
-      box-shadow: 0 0 6px rgba(0, 255, 204, 0.2);
-    }
-
-    .lang-badge {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--neon-cyan);
-      background: rgba(0, 210, 255, 0.1);
-      border: 1px solid var(--neon-cyan);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 10px;
-      line-height: 1.3;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    }
-
-    .news-image {
-      width: 100%;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      display: block;
-      border: 1px solid rgba(0, 210, 255, 0.3);
-      background: #000000;
-    }
-
-    /* VISTA DE RESUMEN Y NOTICIA COMPLETA */
-    .summary-text {
-      font-size: 0.85rem;
-      color: #a0b2ce;
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-
-    .full-article-body {
-      display: none;
-      font-size: 0.88rem;
-      color: #e2e8f0;
-      line-height: 1.6;
-      margin-top: 10px;
-      margin-bottom: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(0, 210, 255, 0.3);
-    }
-
-    .full-article-body p {
-      margin-bottom: 10px;
-    }
-
-    .meta {
-      font-size: 0.72rem;
-      color: #64748b;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* BOTÓN LEER COMPLETA */
-    .toggle-btn {
-      background: rgba(0, 210, 255, 0.1);
-      color: var(--neon-cyan);
-      border: 1px solid var(--neon-cyan);
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .toggle-btn:hover {
-      background: var(--neon-cyan);
-      color: #050814;
-      box-shadow: 0 0 10px var(--neon-cyan);
-    }
-
-    .loading, .error {
-      text-align: center;
-      padding: 30px 15px;
-      color: #88a0c0;
-      list-style: none;
-      font-size: 0.9rem;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #556680;
-      font-size: 0.72rem;
-      line-height: 1.4;
-    }
+  footer{
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+    padding: 10px 14px;
+    background: rgba(3, 7, 18, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- ENCABEZADO -->
-    <header>
-      <h1><i class="fa-solid fa-newspaper"></i> Noticias de Aviación</h1>
-      <p class="subtitle" id="current-source-title">Preferente · Noticias en Castellano</p>
+<header>
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <span class="brand-title">NOTICIAS</span>
+    <span class="brand-sub">Spotters Spain</span>
+  </div>
+  <button id="logout" class="secondary hide" style="padding:3px 8px; font-size:0.7rem;">Salir</button>
+</header>
 
-      <div class="filter-group">
-        <!-- DESPLEGABLE SELECCIÓN DE FABRICANTE / FUENTE -->
-        <div class="filter-box">
-          <label for="source-filter"><i class="fa-solid fa-industry"></i> Fuente:</label>
-          <select id="source-filter" class="date-select" onChange="changeSource()">
-            <option value="preferente" selected>Preferente (Aerolíneas)</option>
-            <option value="aena">Aena (Notas de Prensa)</option>
-            <option value="airbus">Airbus (Oficial)</option>
-            <option value="boeing">Boeing (Oficial)</option>
-          </select>
-        </div>
+<main>
+  <!-- SECCIÓN LOGIN -->
+  <section id="login" class="panel hide">
+    <h3 style="margin-top:0; font-size:1rem;">Acceso administración</h3>
+    <form id="loginForm" style="display:grid; gap:8px; max-width:280px;">
+      <input id="email" type="email" placeholder="Correo" required>
+      <input id="pass" type="password" placeholder="Contraseña" required>
+      <button style="justify-self:start;">Entrar</button>
+    </form>
+    <div id="loginMsg" class="msg"></div>
+  </section>
 
-        <!-- FILTRO POR DÍAS -->
-        <div class="filter-box">
-          <label for="day-filter"><i class="fa-regular fa-calendar-check"></i> Mostrar:</label>
-          <select id="day-filter" class="date-select" onChange="filterAndRender()">
-            <option value="all" selected>Todas las noticias</option>
-            <option value="1">Últimas 24h (Hoy)</option>
-            <option value="2">Últimos 2 días</option>
-            <option value="3">Últimos 3 días</option>
-            <option value="7">Última semana</option>
-          </select>
-        </div>
-      </div>
+  <!-- PANEL ADMIN -->
+  <section id="admin" class="panel hide">
+    <h3 style="margin-top:0; font-size:1rem;">Panel de control</h3>
+    <p class="muted" style="margin:0 0 8px;">Publicar nueva noticia</p>
+    <form id="publish" style="display:grid; gap:8px;">
+      <input id="title" maxlength="180" placeholder="Titular" required>
+      <textarea id="body" rows="3" placeholder="Contenido de la noticia..." required></textarea>
+      <label>Imagen (Ajuste y compresión automática) 
+        <input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required>
+      </label>
+      <button style="justify-self:start;">Publicar</button>
+    </form>
+    <div id="pubMsg" class="msg"></div>
 
-      <p class="status" id="status">Comprobando caché de 10 días...</p>
-      <button id="btn"><i class="fa-solid fa-rotate-right"></i> Actualizar ahora</button>
-    </header>
+    <div id="ownerZone" class="hide">
+      <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
+      <p class="muted" style="margin:0 0 6px;">Crear usuario editor</p>
+      <form id="userForm" style="display:grid; gap:8px; max-width:280px;">
+        <input id="newEmail" type="email" placeholder="Correo" required>
+        <input id="newPass" type="password" minlength="8" placeholder="Contraseña (mín 8 chars)" required>
+        <button style="justify-self:start;">Crear usuario</button>
+      </form>
+      <div id="userMsg" class="msg"></div>
+    </div>
+  </section>
 
-    <!-- CONTENEDOR DE NOTICIAS -->
-    <ul class="list" id="news-list">
-      <li class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i> Cargando noticias en castellano...</li>
-    </ul>
-
-    <footer id="footer-source-text">
-      Fuente: Preferente.com · Sección Aerolíneas<br>
-      Spotters Spain
-    </footer>
+  <div class="section-header">
+    <h2 class="section-title">Últimas publicaciones</h2>
+    <button id="filterToggleBtn" class="secondary">🔍 Filtros</button>
   </div>
 
-  <script>
-    const CACHE_BASE_KEY = 'aviation_news_10days_cache_v1_';
-    const CACHE_DAYS = 10; // PERSISTENCIA ESTRICTA DE 10 DÍAS
+  <!-- MÓDULO DESPLEGABLE DE FILTROS -->
+  <div class="filter-wrapper" id="filterWrapper">
+    <label>Desde <input id="from" type="date"></label>
+    <label>Hasta <input id="to" type="date"></label>
+    <div class="filter-actions">
+      <button id="filter" class="secondary">Filtrar</button>
+      <button id="clear" class="secondary">Ver todas</button>
+      <button id="adminBtn" class="secondary" style="border-color: rgba(0,243,255,0.4); color: #fff;">⚙️ Admin</button>
+    </div>
+  </div>
 
-    // RESPALDO DE SEGURIDAD EN CASTELLANO
-    const FALLBACK_NEWS = {
-      preferente: [
-        {
-          title: "Las aerolíneas refuerzan sus programaciones de vuelo para la temporada estival",
-          link: "https://www.preferente.com",
-          source: "Preferente",
-          date: new Date(),
-          summaryText: "Las principales compañías aéreas que operan en Europa registran altos niveles de ocupación y amplían sus frecuencias en rutas intercontinentales...",
-          fullText: "<p>Las aerolíneas españolas e internacionales incrementan notablemente su oferta de asientos impulsadas por la fuerte demanda turística y la incorporación de nuevos aviones de última generación a sus flotas comerciales.</p>",
-          image: "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?auto=format&fit=crop&w=800&q=80"
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+    <span id="count" class="muted"></span>
+  </div>
+
+  <p id="feedMsg" class="msg"></p>
+  <section id="news" class="grid"></section>
+  
+  <p style="text-align:center; margin-top:12px;">
+    <button id="next" class="secondary hide">Cargar más</button>
+  </p>
+</main>
+
+<!-- MODAL LECTOR -->
+<div id="modal" class="modal hide">
+  <article>
+    <button id="close" class="secondary" style="float:right;">Cerrar</button>
+    <div id="detail"></div>
+  </article>
+</div>
+
+<!-- FOOTER LIMPIO -->
+<footer>
+  <span>Spotters Spain</span>
+  <span class="muted">Sección de Noticias</span>
+</footer>
+
+<script>
+const SUPABASE_URL='https://oxqgceyugjahicnqgtsq.supabase.co', KEY='sb_publishable_lgtVKnJK13fqwR2xIazsiA_nXRcwO_T';
+const FIRST=8, MORE=8, LIMIT=6*1024*1024, ok=!SUPABASE_URL.includes('TU-PROYECTO')&&!KEY.includes('TU-CLAVE');
+let sb=null, sdk=null, initError="";
+let session=null, isOwner=false, offset=0, loadVersion=0, items=[], filter={};
+
+const $=x=>document.querySelector(x);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/**
+ * CONVERTIDOR DE ENLACES A AZUL E INTEGRACIÓN CON APPS DE FACEBOOK E INSTAGRAM
+ */
+function linkify(text) {
+  if (!text) return '';
+  const escaped = esc(text);
+  const urlRegex = /(https?:\/\/[^\s<]+|www\.[^\s<]+)/g;
+
+  return escaped.replace(urlRegex, (url) => {
+    let fullUrl = url.startsWith('www.') ? 'https://' + url : url;
+    let icon = '🔗 ';
+    let label = url;
+
+    if (fullUrl.includes('facebook.com') || fullUrl.includes('fb.watch') || fullUrl.includes('fb.me')) {
+      icon = '📘 ';
+      label = 'Facebook';
+    } else if (fullUrl.includes('instagram.com') || fullUrl.includes('instagr.am')) {
+      icon = '📸 ';
+      label = 'Instagram';
+    } else if (fullUrl.includes('twitter.com') || fullUrl.includes('x.com')) {
+      icon = '🐦 ';
+      label = 'X / Twitter';
+    } else if (fullUrl.includes('youtube.com') || fullUrl.includes('youtu.be')) {
+      icon = '▶️ ';
+      label = 'YouTube';
+    }
+
+    return `<a href="${fullUrl}" target="_blank" rel="noopener noreferrer" class="news-link" onclick="event.stopPropagation();">${icon}${label}</a>`;
+  });
+}
+
+function say(el,s,bad=false){
+  const target=$(el);
+  if(target){
+    target.textContent=s;
+    target.className='msg'+(bad?' err':' ok');
+  }
+}
+
+try{
+  sdk=window.supabase||(typeof supabase!=='undefined'?supabase:null);
+  if(!ok) initError='La URL o la clave pública no está configurada.';
+  else if(!sdk||typeof sdk.createClient!=='function') initError='No se encontró la librería Supabase.';
+  else sb=sdk.createClient(SUPABASE_URL,KEY);
+}catch(e){
+  initError=e.message;
+  console.error('Error al iniciar Supabase',e);
+}
+
+// Alternar la visibilidad de los filtros mediante el botón
+$('#filterToggleBtn').onclick=()=>{
+  $('#filterWrapper').classList.toggle('open');
+};
+
+// Acceso Admin integrado en Filtros
+$('#adminBtn').onclick=()=>{
+  $('#login').classList.toggle('hide');
+  $('#filterWrapper').classList.remove('open');
+  if(!sdk) say('#loginMsg','No se pudo cargar el acceso. Revisa tu conexión.',true);
+};
+
+async function authUI(){
+  $('#admin').classList.toggle('hide',!session);
+  $('#logout').classList.toggle('hide',!session);
+  $('#login').classList.add('hide');
+  $('#ownerZone').classList.add('hide');
+  const previousOwner=isOwner;
+  isOwner=false;
+  if(session&&sb){
+    const {data}=await sb.from('news_admins').select('is_owner').eq('user_id',session.user.id).maybeSingle();
+    isOwner=!!data?.is_owner;
+    $('#ownerZone').classList.toggle('hide',!isOwner);
+  }
+  if(previousOwner!==isOwner)reset();
+}
+
+async function load(version=loadVersion){
+  if(!sb){
+    say('#feedMsg','No se pudo iniciar Supabase: '+(initError||'revisa la configuración.'),true);
+    return;
+  }
+  let q=sb.from('news').select('*').order('published_at',{ascending:false});
+  if(filter.from) q=q.gte('published_at',filter.from+'T00:00:00');
+  if(filter.to) q=q.lt('published_at',new Date(new Date(filter.to+'T00:00:00').getTime()+86400000).toISOString());
+  
+  const size=offset===0?FIRST:MORE;
+  const {data,error}=await q.range(offset,offset+size-1);
+  if(version!==loadVersion)return;
+  
+  if(error){
+    say('#feedMsg',error.message,true);
+    return;
+  }
+  
+  items=items.concat(data||[]);
+  $('#count').textContent=items.length+' noticia'+(items.length===1?'':'s');
+  $('#next').classList.toggle('hide',(data||[]).length<size);
+  
+  for(const n of data||[]){
+    const url=sb.storage.from('news-images').getPublicUrl(n.image_path).data.publicUrl;
+    const c=document.createElement('article');
+    c.className='card';
+    
+    c.innerHTML=`
+      <img src="${esc(url)}" alt="${esc(n.title)}" onerror="this.style.display='none'">
+      <div class="inside">
+        <div>
+          <div class="inside-header">
+            <small class="muted">${new Date(n.published_at).toLocaleDateString('es-ES',{day:'2-digit',month:'short'})}</small>
+          </div>
+          <h2>${linkify(n.title)}</h2>
+          <p>${linkify(n.body)}</p>
+        </div>
+        <div class="inside-footer">
+          <button class="secondary read-btn">Leer noticia</button>
+        </div>
+      </div>`;
+    
+    c.querySelector('.read-btn').onclick=()=>openModal(n, url);
+
+    if(isOwner){
+      const deleteButton=document.createElement('button');
+      deleteButton.type='button';
+      deleteButton.className='danger';
+      deleteButton.style.padding='2px 6px';
+      deleteButton.style.fontSize='0.65rem';
+      deleteButton.textContent='Borrar';
+      deleteButton.onclick=()=>deleteNews(n);
+      c.querySelector('.inside-footer').append(deleteButton);
+    }
+    $('#news').append(c);
+  }
+  say('#feedMsg',items.length?'':'No hay noticias disponibles.');
+}
+
+/**
+ * MOTOR DE ANÁLISIS TEXTUAL REAL (PALABRA POR PALABRA Y FRASE POR FRASE)
+ */
+function analyzeExactText(title, body) {
+  const fullText = title + ". " + body;
+  const sentences = fullText.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 5);
+
+  const posWords = ['nuevo', 'nueva', 'ampliación', 'mejora', 'éxito', 'apertura', 'inauguración', 'crecimiento', 'incorporación', 'avance', 'incremento', 'modernización', 'solución', 'seguridad', 'beneficio', 'eficiencia', 'acuerdo', 'aprobado', 'positivo', 'superación'];
+  const negWords = ['retraso', 'demora', 'cancelación', 'problema', 'falla', 'error', 'accidente', 'incidencia', 'riesgo', 'cierre', 'reducción', 'pérdida', 'conflicto', 'huelga', 'alerta', 'coste', 'restricción', 'suspendido', 'daño', 'negativo', 'afectado'];
+
+  const posSentences = [];
+  const negSentences = [];
+
+  sentences.forEach(s => {
+    const sLower = s.toLowerCase();
+    let posScore = 0;
+    let negScore = 0;
+
+    posWords.forEach(w => { if (sLower.includes(w)) posScore++; });
+    negWords.forEach(w => { if (sLower.includes(w)) negScore++; });
+
+    if (posScore > negScore) {
+      posSentences.push(s.trim());
+    } else if (negScore > posScore) {
+      negSentences.push(s.trim());
+    }
+  });
+
+  const posResult = posSentences.length > 0 ? posSentences : [];
+  const negResult = negSentences.length > 0 ? negSentences : [];
+
+  if (posResult.length === 0) {
+    posResult.push(`Divulgación directa de información sobre "${title.trim()}" que mantiene informada a la comunidad.`);
+  }
+
+  if (negResult.length === 0) {
+    negResult.push(`El comunicado sobre "${title.trim()}" requiere seguimiento para evaluar su impacto operativo definitivo.`);
+  }
+
+  return { pos: posResult, neg: negResult };
+}
+
+// Abrir detalle noticia con Análisis de Impacto Directo y Enlaces Activos
+function openModal(n, url){
+  $('#detail').innerHTML=`
+    <small class="muted">${new Date(n.published_at).toLocaleString('es-ES')}</small>
+    <h2 style="margin:6px 0 10px; font-size:1.1rem; color:#fff;">${linkify(n.title)}</h2>
+    <img src="${esc(url)}" alt="${esc(n.title)}" onerror="this.style.display='none'">
+    <p>${linkify(n.body)}</p>
+    <div style="margin-top:14px;">
+      <button id="toggleAnalysisBtn" class="secondary" style="width:100%; text-align:center;">⚖️ Lo negativo y positivo de esta noticia</button>
+      <div id="analysisContainer" class="hide"></div>
+    </div>`;
+
+  $('#modal').classList.remove('hide');
+
+  $('#toggleAnalysisBtn').onclick=()=>{
+    const container=$('#analysisContainer');
+    if(!container.classList.contains('hide')){
+      container.classList.add('hide');
+      return;
+    }
+    
+    const analysis = analyzeExactText(n.title, n.body);
+
+    container.innerHTML = `
+      <div class="analysis-box">
+        <div class="analysis-section analysis-pos">
+          <strong>✅ Impacto Positivo Extraído del Texto:</strong>
+          <ul style="margin:4px 0 0 16px; padding:0;">
+            ${analysis.pos.map(p=>`<li style="margin-bottom:4px;">${linkify(p)}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="analysis-section analysis-neg">
+          <strong>⚠️ Impacto Negativo / Factores de Riesgo Extraídos:</strong>
+          <ul style="margin:4px 0 0 16px; padding:0;">
+            ${analysis.neg.map(p=>`<li style="margin-bottom:4px;">${linkify(p)}</li>`).join('')}
+          </ul>
+        </div>
+      </div>`;
+    container.classList.remove('hide');
+  };
+}
+
+// Compresión ultrarrápida de imagen en cliente (HTML5 Canvas)
+function compressImage(file, maxWidth = 800, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let width = img.width;
+      let height = img.height;
+      
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      canvas.toBlob(blob => {
+        if (blob) {
+          const resizedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          });
+          resolve(resizedFile);
+        } else {
+          reject(new Error("Error al exportar blob"));
         }
-      ],
-      aena: [
-        {
-          title: "Aena gestiona con éxito el incremento de operaciones en la red de aeropuertos españoles",
-          link: "https://www.aena.es",
-          source: "Aena Oficial",
-          date: new Date(),
-          summaryText: "La red de aeropuertos de Aena registra cifras elevadas de tráfico de pasajeros y operaciones comerciales, optimizando sus infraestructuras...",
-          fullText: "<p>Aena continúa mejorando la eficiencia operativa y los servicios aeroportuarios en toda su red en España, manteniendo altos estándares de seguridad y sostenibilidad en el transporte aéreo nacional e internacional.</p>",
-          image: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80"
-        }
-      ],
-      airbus: [
-        {
-          title: "Airbus entrega el primer A321neo ensamblado en la línea de montaje de Tianjin a un cliente europeo",
-          link: "https://www.airbus.com",
-          source: "Airbus Oficial",
-          date: new Date(),
-          summaryText: "Airbus alcanza un nuevo hito operativo al expandir sus capacidades globales de ensamblaje para satisfacer la demanda récord de aviones comerciales...",
-          fullText: "<p>Airbus ha anunciado la entrega con éxito de un nuevo avión A321neo procedente de sus instalaciones de ensamblaje final. El fabricante continúa aumentando la producción en sus líneas europeas y asiáticas para cumplir con los pedidos de las aerolíneas a nivel mundial.</p>",
-          image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80"
-        }
-      ],
-      boeing: [
-        {
-          title: "Boeing destaca las perspectivas del mercado comercial y los avances en la flota 737 MAX",
-          link: "https://boeing.mediaroom.com",
-          source: "Boeing Oficial",
-          date: new Date(),
-          summaryText: "Boeing actualiza sus proyecciones de flota global impulsada por la alta demanda de renovación de aviones de un solo pasillo y de largo alcance...",
-          fullText: "<p>Boeing Commercial Airplanes ha detallado los objetivos clave de entrega y mejoras de ingeniería para sus programas 787 Dreamliner y 737 MAX, respondiendo al crecimiento sostenido de pedidos de las principales aerolíneas mundiales.</p>",
-          image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80"
-        }
-      ]
+      }, 'image/jpeg', quality);
     };
 
-    const SOURCES_CONFIG = {
-      preferente: {
-        name: 'Preferente',
-        subtitle: 'Preferente · Noticias de Aerolíneas (Castellano)',
-        footer: 'Fuente: Preferente.com · Sección Aerolíneas',
-        url: 'https://www.preferente.com/noticias-de-transportes/noticias-de-aerolineas/feed'
-      },
-      aena: {
-        name: 'Aena Oficial',
-        subtitle: 'Aena · Notas de Prensa Oficiales (Castellano)',
-        footer: 'Fuente Oficial: Aena.es · Sala de Prensa',
-        url: 'https://www.aena.es/es/prensa/rss.xml'
-      },
-      airbus: {
-        name: 'Airbus Oficial',
-        subtitle: 'Airbus · Sala de Prensa Oficial (Traducida al Castellano)',
-        footer: 'Fuente Oficial: Airbus Press Releases',
-        url: 'https://www.airbus.com/en/newsroom/press-releases/rss.xml'
-      },
-      boeing: {
-        name: 'Boeing Oficial',
-        subtitle: 'Boeing · Sala de Prensa Oficial (Traducida al Castellano)',
-        footer: 'Fuente Oficial: Boeing Media Room',
-        url: 'https://boeing.mediaroom.com/news-releases-rss?pagetemplate=rss'
-      }
+    img.onerror = (err) => {
+      URL.revokeObjectURL(objectUrl);
+      reject(err);
     };
 
-    let currentSourceKey = 'preferente';
-    let rawNewsList = [];
+    img.src = objectUrl;
+  });
+}
 
-    function canUseStorage() {
-      try {
-        const test = '__test__';
-        localStorage.setItem(test, test);
-        localStorage.removeItem(test);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
+async function deleteNews(n){
+  if(!isOwner)return;
+  if(!confirm('¿Borrar la noticia "'+n.title+'"? Esta acción no se puede deshacer.'))return;
+  const {error}=await sb.from('news').delete().eq('id',n.id);
+  if(error){alert('No se pudo borrar la noticia: '+error.message);return}
+  let imageError=null;
+  if(n.image_path){
+    const result=await sb.storage.from('news-images').remove([n.image_path]);
+    imageError=result.error;
+  }
+  reset();
+  alert(imageError?'La noticia se borró, pero no se pudo borrar su imagen.':'Noticia borrada.');
+}
 
-    const storageAvailable = canUseStorage();
+function reset(){
+  offset=0;
+  items=[];
+  $('#news').replaceChildren();
+  loadVersion++;
+  load(loadVersion);
+}
 
-    // COMPROBAR SI LA CACHÉ ES VÁLIDA POR 10 DÍAS
-    function isCacheValid(sourceKey) {
-      if (!storageAvailable) return false;
-      try {
-        const raw = localStorage.getItem(CACHE_BASE_KEY + sourceKey);
-        if (!raw) return false;
-        const data = JSON.parse(raw);
-        const ageDays = (Date.now() - data.timestamp) / (1000 * 60 * 60 * 24);
-        return ageDays < CACHE_DAYS && data.news && data.news.length > 0;
-      } catch {
-        return false;
-      }
-    }
+if(sb){
+  sb.auth.getSession().then(x=>{session=x.data.session;authUI();});
+  sb.auth.onAuthStateChange((_,s)=>{session=s;authUI();});
+  load();
+}else{
+  say('#feedMsg','No se pudo iniciar Supabase: '+(initError||'sin cliente detectado.'),true);
+}
 
-    function getCached(sourceKey) {
-      if (!storageAvailable) return null;
-      try {
-        return JSON.parse(localStorage.getItem(CACHE_BASE_KEY + sourceKey));
-      } catch {
-        return null;
-      }
-    }
+$('#loginForm').onsubmit=async e=>{
+  e.preventDefault();
+  if(!sb){
+    say('#loginMsg','Sin conexión a Supabase.',true);
+    return;
+  }
+  const {data,error}=await sb.auth.signInWithPassword({email:$('#email').value,password:$('#pass').value});
+  if(error) say('#loginMsg',error.message,true);
+  else{
+    session=data.session;
+    authUI();
+  }
+};
 
-    function saveCache(sourceKey, news) {
-      if (!storageAvailable) return;
-      try {
-        localStorage.setItem(CACHE_BASE_KEY + sourceKey, JSON.stringify({
-          timestamp: Date.now(),
-          news
-        }));
-      } catch (e) {}
-    }
+$('#logout').onclick=async()=>{
+  await sb.auth.signOut();
+  session=null;
+  authUI();
+};
 
-    function fetchWithTimeout(url, ms = 7000) {
-      return Promise.race([
-        fetch(url),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms))
-      ]);
-    }
+$('#publish').onsubmit=async e=>{
+  e.preventDefault();
+  const fileInput=$('#image').files[0];
+  if(!fileInput) return;
+  
+  say('#pubMsg','Optimizando imagen...');
+  let compressedFile;
+  try{
+    compressedFile = await compressImage(fileInput, 800, 0.8);
+  }catch(err){
+    compressedFile = fileInput;
+  }
 
-    // TRADUCTOR EN TIEMPO REAL AL CASTELLANO
-    async function translateToCastellano(text) {
-      if (!text || text.trim().length === 0) return text;
-      try {
-        const clean = text.replace(/<[^>]*>/g, ' ');
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=es&dt=t&q=${encodeURIComponent(clean.substring(0, 900))}`;
-        const res = await fetchWithTimeout(url, 4500);
-        const data = await res.json();
-        if (data && data[0]) {
-          return data[0].map(item => item[0]).join('');
-        }
-      } catch (e) {
-        console.warn('Uso de respaldo por indisponibilidad de traductor:', e);
-      }
-      return text;
-    }
+  if(compressedFile.size>LIMIT){
+    say('#pubMsg','La imagen supera 6 MB incluso comprimida.',true);
+    return;
+  }
 
-    function cleanText(html) {
-      if (!html) return '';
-      return html
-        .replace(/<[^>]*>/g, ' ')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
+  say('#pubMsg','Subiendo publicación...');
+  const path=crypto.randomUUID()+'-'+compressedFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  let uploadResult;
+  try{
+    uploadResult=await sb.storage.from('news-images').upload(path,compressedFile,{contentType:'image/jpeg'});
+  }catch(e){
+    say('#pubMsg','Error al subir imagen: '+(e.message||String(e)),true);
+    return;
+  }
+  let {error}=uploadResult;
+  if(error){
+    const detail=[error.message,error.statusCode,error.details?JSON.stringify(error.details):''].filter(Boolean).join(' — ');
+    say('#pubMsg',detail,true);
+    return;
+  }
+  ({error}=await sb.from('news').insert({title:$('#title').value.trim(),body:$('#body').value.trim(),image_path:path}));
+  if(error){
+    await sb.storage.from('news-images').remove([path]);
+    say('#pubMsg',error.message,true);
+  }else{
+    say('#pubMsg','Noticia publicada correctamente.');
+    $('#publish').reset();
+    reset();
+  }
+};
 
-    function formatFullArticle(htmlContent) {
-      if (!htmlContent) return '';
-      let text = htmlContent
-        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-        .replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
+$('#userForm').onsubmit=async e=>{
+  e.preventDefault();
+  const {data,error}=await sb.functions.invoke('create-news-user',{body:{email:$('#newEmail').value,password:$('#newPass').value}});
+  say('#userMsg',error?.message||data?.error||'Cuenta creada.',!!(error||data?.error));
+  if(!error&&!data?.error)$('#userForm').reset();
+};
 
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = text;
-      
-      const paragraphs = Array.from(tempDiv.querySelectorAll('p'))
-        .map(p => p.textContent.trim())
-        .filter(t => t.length > 20);
+$('#filter').onclick=()=>{
+  filter={from:$('#from').value,to:$('#to').value};
+  if(filter.from || filter.to){
+    $('#filterToggleBtn').textContent = '🔍 Filtro activo';
+  } else {
+    $('#filterToggleBtn').textContent = '🔍 Filtros';
+  }
+  $('#filterWrapper').classList.remove('open');
+  reset();
+};
 
-      if (paragraphs.length > 0) {
-        return paragraphs.map(p => `<p>${p}</p>`).join('');
-      }
+$('#clear').onclick=()=>{
+  $('#from').value=$('#to').value='';
+  filter={};
+  $('#filterToggleBtn').textContent = '🔍 Filtros';
+  $('#filterWrapper').classList.remove('open');
+  reset();
+};
 
-      const clean = cleanText(text);
-      return `<p>${clean}</p>`;
-    }
+$('#next').onclick=()=>{
+  offset=items.length;
+  load();
+};
 
-    function getImageUrl(item) {
-      if (item.thumbnail) return item.thumbnail;
-      if (item.enclosure && item.enclosure.link) return item.enclosure.link;
-      const content = item.content || item.description || '';
-      const match = content.match(/<img[^>]+src=["']([^"']+)["']/i);
-      return match ? match[1] : null;
-    }
-
-    async function fetchFeed(config) {
-      const apis = [
-        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(config.url)}`,
-        `https://api.allorigins.win/get?url=${encodeURIComponent(config.url)}`
-      ];
-
-      for (const api of apis) {
-        try {
-          const res = await fetchWithTimeout(api);
-          const data = await res.json();
-          
-          let items = [];
-          if (data.status === 'ok' && data.items && data.items.length > 0) {
-            items = data.items;
-          } else if (data.contents) {
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(data.contents, "text/xml");
-            const xmlItems = Array.from(xml.querySelectorAll("item, entry"));
-            
-            items = xmlItems.map(node => ({
-              title: node.querySelector("title") ? node.querySelector("title").textContent : "",
-              link: node.querySelector("link") ? (node.querySelector("link").getAttribute("href") || node.querySelector("link").textContent) : "#",
-              pubDate: node.querySelector("pubDate, updated, published") ? node.querySelector("pubDate, updated, published").textContent : new Date(),
-              description: node.querySelector("description, content") ? node.querySelector("description, content").textContent : ""
-            }));
-          }
-
-          if (items.length > 0) {
-            const processedItems = [];
-
-            for (const item of items.slice(0, 10)) {
-              const rawBody = item.content || item.description || '';
-              let summary = cleanText(rawBody).substring(0, 180) + '...';
-              let fullBodyFormatted = formatFullArticle(rawBody);
-              let title = (item.title || '').trim();
-
-              // Solo traducimos si la fuente no está en español originalmente
-              if (currentSourceKey !== 'preferente' && currentSourceKey !== 'aena') {
-                title = await translateToCastellano(title);
-                summary = await translateToCastellano(summary);
-                fullBodyFormatted = `<p>${await translateToCastellano(cleanText(rawBody).substring(0, 600))}</p>`;
-              }
-
-              processedItems.push({
-                title: title,
-                link: item.link || '#',
-                source: config.name,
-                date: item.pubDate ? new Date(item.pubDate) : new Date(),
-                summaryText: summary,
-                fullText: fullBodyFormatted,
-                image: getImageUrl(item)
-              });
-            }
-
-            return processedItems;
-          }
-        } catch (e) {
-          console.warn('Proxy fallido para:', config.name);
-        }
-      }
-
-      return FALLBACK_NEWS[currentSourceKey] || [];
-    }
-
-    function changeSource() {
-      currentSourceKey = document.getElementById('source-filter').value;
-      const config = SOURCES_CONFIG[currentSourceKey];
-      
-      document.getElementById('current-source-title').textContent = config.subtitle;
-      document.getElementById('footer-source-text').innerHTML = `${config.footer}<br>Spotters Spain`;
-
-      loadNews(false);
-    }
-
-    function filterAndRender() {
-      const filterValue = document.getElementById('day-filter').value;
-      let filtered = [...rawNewsList];
-
-      if (filterValue !== 'all') {
-        const maxDays = parseInt(filterValue, 10);
-        const now = new Date().getTime();
-        const maxMs = maxDays * 24 * 60 * 60 * 1000;
-
-        filtered = filtered.filter(item => {
-          const itemTime = new Date(item.date).getTime();
-          return (now - itemTime) <= maxMs;
-        });
-      }
-
-      render(filtered);
-    }
-
-    function render(news) {
-      const list = document.getElementById('news-list');
-      if (!news || news.length === 0) {
-        list.innerHTML = '<li class="loading"><i class="fa-solid fa-circle-exclamation"></i> No hay noticias registradas para el rango de días seleccionado.</li>';
-        return;
-      }
-
-      list.innerHTML = news.map((item, index) => `
-        <li>
-          <div class="source-badge-box">
-            <span class="source"><i class="fa-solid fa-plane"></i> ${item.source}</span>
-            <span class="lang-badge"><i class="fa-solid fa-language"></i> Castellano</span>
-          </div>
-          ${item.image ? `<img class="news-image" src="${item.image}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
-          <div class="title">${item.title}</div>
-          
-          <!-- Resumen corto -->
-          <div class="summary-text" id="summary-${index}">
-            ${item.summaryText}
-          </div>
-          
-          <!-- Noticia completa limpia -->
-          <div class="full-article-body" id="full-body-${index}">
-            ${item.fullText}
-          </div>
-
-          <div class="meta">
-            <i class="fa-regular fa-calendar-days"></i> 
-            ${new Date(item.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </div>
-          
-          <button class="toggle-btn" onclick="toggleNewsBody(${index})" id="btn-${index}">
-            <i class="fa-solid fa-book-open"></i> Leer noticia completa
-          </button>
-        </li>
-      `).join('');
-    }
-
-    // DESPLEGAR / CONTRAER NOTICIA
-    window.toggleNewsBody = function(index) {
-      const summary = document.getElementById(`summary-${index}`);
-      const fullBody = document.getElementById(`full-body-${index}`);
-      const btn = document.getElementById(`btn-${index}`);
-
-      if (fullBody.style.display === 'block') {
-        fullBody.style.display = 'none';
-        summary.style.display = 'block';
-        btn.innerHTML = `<i class="fa-solid fa-book-open"></i> Leer noticia completa`;
-      } else {
-        fullBody.style.display = 'block';
-        summary.style.display = 'none';
-        btn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Contraer noticia`;
-      }
-    };
-
-    // CARGA CON SISTEMA DE CACHÉ DE 10 DÍAS
-    async function loadNews(forceRefresh = false) {
-      const status = document.getElementById('status');
-      const btn = document.getElementById('btn');
-      const list = document.getElementById('news-list');
-      const config = SOURCES_CONFIG[currentSourceKey];
-      btn.disabled = true;
-
-      // 1. SI LA CACHÉ ES VÁLIDA (< 10 DÍAS) Y NO SE FORZÓ REFRESCO, CARGA DIRECTA
-      if (!forceRefresh && isCacheValid(currentSourceKey)) {
-        const cacheData = getCached(currentSourceKey);
-        rawNewsList = cacheData.news;
-        rawNewsList.forEach(item => item.date = new Date(item.date));
-        
-        filterAndRender();
-
-        const expiresDate = new Date(cacheData.timestamp + CACHE_DAYS * 24 * 60 * 60 * 1000);
-        status.textContent = `Caché activa (10 días) · Próxima actualización: ${expiresDate.toLocaleDateString('es-ES')}`;
-        btn.disabled = false;
-        return;
-      }
-
-      // 2. SI HA PASADO MÁS DE 10 DÍAS O SE APRIETA REFRESCAR, DESCARGAR Y TRADUCIR DE NUEVO
-      status.textContent = `Actualizando fuentes de ${config.name}...`;
-      list.innerHTML = '<li class="loading"><i class="fa-solid fa-circle-notch fa-spin"></i> Obteniendo noticias...</li>';
-      
-      let items = await fetchFeed(config);
-      
-      if (!items || items.length === 0) {
-        items = FALLBACK_NEWS[currentSourceKey] || [];
-      }
-
-      items.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      const seen = new Set();
-      const unique = [];
-      for (const item of items) {
-        const key = item.title.toLowerCase().slice(0, 45);
-        if (!seen.has(key) && item.title.length > 5) {
-          seen.add(key);
-          unique.push(item);
-        }
-      }
-
-      rawNewsList = unique;
-      filterAndRender();
-
-      // SAVE DE CACHÉ DE 10 DÍAS
-      if (rawNewsList.length > 0) {
-        saveCache(currentSourceKey, rawNewsList);
-      }
-
-      const nextUpdate = new Date(Date.now() + CACHE_DAYS * 24 * 60 * 60 * 1000);
-      status.textContent = `Guardado en caché por 10 días · Próximo refresco: ${nextUpdate.toLocaleDateString('es-ES')}`;
-      btn.disabled = false;
-    }
-
-    document.getElementById('btn').addEventListener('click', function() {
-      loadNews(true);
-    });
-
-    loadNews();
-  </script>
+$('#close').onclick=()=>$('#modal').classList.add('hide');
+$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.add('hide');};
+</script>
 </body>
 </html>
