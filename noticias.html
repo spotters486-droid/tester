@@ -383,7 +383,7 @@
   .ok{ color: var(--green); }
   .hide, .hidden{ display: none !important; }
 
-  /* MODAL CON ANÁLISIS DE IMPACTO DE TEXTO */
+  /* MODAL LECTOR */
   .modal{
     position: fixed;
     inset: 0;
@@ -396,6 +396,7 @@
   }
 
   .modal>article{
+    position: relative;
     width: min(650px, 100%);
     max-height: 90vh;
     overflow-y: auto;
@@ -422,31 +423,79 @@
     color: #d7e4f2;
   }
 
-  /* CAJA DE ANÁLISIS EN MODAL */
-  .analysis-box{
-    margin-top: 12px;
-    padding: 10px;
-    border-radius: 6px;
-    background: rgba(3, 7, 18, 0.85);
-    border: 1px solid var(--line);
+  /* MODAL DE ANÁLISIS (POPUP/CARTEL CON RESULTADO) */
+  .analysis-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    background: rgba(1, 4, 12, 0.85);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .analysis-modal-card {
+    width: min(520px, 100%);
+    max-height: 85vh;
+    overflow-y: auto;
+    background: linear-gradient(145deg, #080f24, #02050e);
+    border: 1px solid var(--cyan);
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
   }
+
+  .analysis-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+  }
+
+  .analysis-modal-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .analysis-box{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .analysis-section{
-    padding: 8px 10px;
-    border-radius: 4px;
+    padding: 10px 12px;
+    border-radius: 6px;
     font-size: 0.78rem;
+    line-height: 1.4;
   }
+
   .analysis-pos{
     background: rgba(0, 255, 157, 0.08);
     border-left: 3px solid var(--green);
     color: #a3ffd6;
   }
+
   .analysis-neg{
     background: rgba(255, 70, 100, 0.08);
     border-left: 3px solid #ff4664;
     color: #ffb3c0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   footer{
@@ -545,6 +594,17 @@
     <button id="close" class="secondary" style="float:right;">Cerrar</button>
     <div id="detail"></div>
   </article>
+</div>
+
+<!-- POPUP CARTEL CON EL RESULTADO DEL ANÁLISIS -->
+<div id="analysisModal" class="analysis-modal-overlay hide">
+  <div class="analysis-modal-card">
+    <div class="analysis-modal-header">
+      <h3 class="analysis-modal-title">🔍 Análisis de la Noticia</h3>
+      <button id="closeAnalysisModal" class="secondary" style="padding:2px 8px; font-size:0.7rem;">Cerrar</button>
+    </div>
+    <div id="analysisContent"></div>
+  </div>
 </div>
 
 <!-- FOOTER LIMPIO -->
@@ -739,7 +799,7 @@ function analyzeExactText(title, body) {
   return { pos: posResult, neg: negResult };
 }
 
-// Abrir detalle noticia con Análisis de Impacto Directo y Enlaces Activos
+// Abrir detalle noticia con Análisis de Impacto Directo
 function openModal(n, url){
   $('#detail').innerHTML=`
     <small class="muted">${new Date(n.published_at).toLocaleString('es-ES')}</small>
@@ -747,22 +807,16 @@ function openModal(n, url){
     <img src="${esc(url)}" alt="${esc(n.title)}" onerror="this.style.display='none'">
     <p>${linkify(n.body)}</p>
     <div style="margin-top:14px;">
-      <button id="toggleAnalysisBtn" class="secondary" style="width:100%; text-align:center;">⚖️ Lo negativo y positivo de esta noticia</button>
-      <div id="analysisContainer" class="hide"></div>
+      <button id="toggleAnalysisBtn" class="secondary" style="width:100%; text-align:center;">🔍 Analizar noticia</button>
     </div>`;
 
   $('#modal').classList.remove('hide');
 
+  // AL HACER CLIC EN "ANALIZAR NOTICIA", SE MUESTRA EL POPUP/CARTEL CON EL CONTENIDO
   $('#toggleAnalysisBtn').onclick=()=>{
-    const container=$('#analysisContainer');
-    if(!container.classList.contains('hide')){
-      container.classList.add('hide');
-      return;
-    }
-    
     const analysis = analyzeExactText(n.title, n.body);
 
-    container.innerHTML = `
+    $('#analysisContent').innerHTML = `
       <div class="analysis-box">
         <div class="analysis-section analysis-pos">
           <strong>✅ Impacto Positivo Extraído del Texto:</strong>
@@ -777,9 +831,14 @@ function openModal(n, url){
           </ul>
         </div>
       </div>`;
-    container.classList.remove('hide');
+      
+    $('#analysisModal').classList.remove('hide');
   };
 }
+
+// Cerrar el cartel emergente de análisis
+$('#closeAnalysisModal').onclick=()=>$('#analysisModal').classList.add('hide');
+$('#analysisModal').onclick=e=>{if(e.target===$('#analysisModal'))$('#analysisModal').classList.add('hide');};
 
 // Compresión ultrarrápida de imagen en cliente (HTML5 Canvas)
 function compressImage(file, maxWidth = 800, quality = 0.8) {
