@@ -2253,30 +2253,5 @@
     }
   </script>
   <script src="./app.js"></script>
-
-  <!-- CUADRO DE CONSOLA DE DEPURACIÓN VISUAL -->
-  <div id="debug-log" style="position:fixed;bottom:0;left:0;right:0;height:120px;background:rgba(0,0,0,0.9);color:#00ff00;font-family:monospace;font-size:11px;padding:8px;overflow-y:auto;z-index:999999;">
-    --- LOG DE NOTIFICACIONES ---<br>
-  </div>
-  <script>
-    const logger = document.getElementById('debug-log');
-    function printLog(type, args) {
-      const msg = Array.from(args).map(a => {
-        if (a instanceof Error) return `${a.name}: ${a.message}`;
-        if (typeof a === 'object') {
-          try { return JSON.stringify(a, Object.getOwnPropertyNames(a)); } 
-          catch (e) { return String(a); }
-        }
-        return a;
-      }).join(' ');
-      
-      logger.innerHTML += `<div style="color:${type === 'error' ? '#ff5555' : '#00ff00'}">[${type.toUpperCase()}] ${msg}</div>`;
-      logger.scrollTop = logger.scrollHeight;
-    }
-    const oldLog = console.log;
-    const oldErr = console.error;
-    console.log = function() { oldLog.apply(console, arguments); printLog('log', arguments); };
-    console.error = function() { oldErr.apply(console, arguments); printLog('error', arguments); };
-  </script>
 </body>
 </html>
