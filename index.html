@@ -7,6 +7,9 @@
   <meta name="description" content="Spotters Spain - Aviación & Spotting">
   <title>Spotters Spain - Aviación & Spotting</title>
 
+  <!-- SDK WebintoApp -->
+  <script src="https://www.webintoapp.com/assets/js/webintoapp.js"></script>
+
   <!-- Web App Manifest Inline Data URI -->
   <link rel="manifest" href='data:application/manifest+json,{"name":"Spotters Spain","short_name":"Spotters","start_url":".","display":"standalone","background_color":"#030611","theme_color":"#00d2ff"}'>
 
@@ -336,7 +339,7 @@
       position: absolute;
       bottom: -22px;
       right: -22px;
-      width: 58px;
+      width: 48px;
       height: 58px;
       border-top: 4px solid var(--gold-yellow);
       border-left: 4px solid var(--gold-yellow);
@@ -2192,7 +2195,7 @@
     window.addEventListener('load', checkAndShowWhatsAppNotification);
   </script>
 
-  <!-- REGISTRO DEL SERVICE WORKER SIN SOLICITUD AUTOMÁTICA DE PERMISOS -->
+  <!-- REGISTRO DEL SERVICE WORKER (ÚNICAMENTE SILENCIOSO AL CARGAR) -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -2200,6 +2203,53 @@
           .then(() => console.log('Service Worker registrado correctamente'))
           .catch(err => console.error('Error al registrar Service Worker:', err));
       });
+    }
+
+    /* FUNCIÓN MANUAL DUAL: WEBINTOAPP (APK) + SERVICE WORKER (PWA/WEB) */
+    async function solicitarPermisoPushManual() {
+      console.log("Iniciando solicitud de notificaciones...");
+
+      // 1. DETECCIÓN Y REGISTRO DENTRO DE LA APK DE WEBINTOAPP
+      if (typeof WebintoApp !== 'undefined' || window.WebintoAppJS || typeof wia !== 'undefined') {
+        console.log("Entorno detectado: APK WebintoApp");
+        try {
+          if (window.WebintoAppJS && window.WebintoAppJS.registerPush) {
+            window.WebintoAppJS.registerPush();
+          } else if (typeof wia !== 'undefined' && wia.registerPush) {
+            wia.registerPush();
+          } else if (typeof WebintoApp !== 'undefined' && WebintoApp.registerPush) {
+            WebintoApp.registerPush();
+          }
+          console.log("¡Suscripción enviada a WebintoApp correctamente!");
+        } catch (e) {
+          console.error("Error al registrar en WebintoApp:", e);
+        }
+        return;
+      }
+
+      // 2. DETECCIÓN Y REGISTRO EN NAVEGADOR WEB / PWA (SUPABASE)
+      console.log("Entorno detectado: Navegador Web / PWA");
+      if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+        console.error("Este navegador no soporta notificaciones Push.");
+        return;
+      }
+
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          const registration = await navigator.serviceWorker.ready;
+          
+          if (typeof solicitarSuscripcionPush === 'function') {
+            await solicitarSuscripcionPush();
+          } else {
+            console.log("Permiso concedido. Lógica de suscripción lista en app.js");
+          }
+        } else {
+          console.log("El permiso de notificaciones no fue concedido");
+        }
+      } catch (err) {
+        console.error("Error al solicitar permiso:", err);
+      }
     }
   </script>
   <script src="./app.js"></script>
