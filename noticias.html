@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noticias - Spotters Spain</title>
+  <title>Boletín Oficial - Spotters Spain</title>
 
   <!-- Librería Integrada Supabase JS -->
   <script>
@@ -27,6 +27,7 @@
     color: var(--text);
     background: var(--bg);
   }
+
 
   *{
     box-sizing: border-box;
@@ -68,13 +69,41 @@
     align-items: center;
     gap: 8px;
   }
-  .brand-dot{
-    width: 8px;
-    height: 8px;
-    background: var(--cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--cyan);
+  
+  /* ICONO SVG ANIMADO RADAR/AVIACIÓN */
+  .brand-radar-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--cyan);
+    filter: drop-shadow(0 0 5px var(--cyan));
+    animation: radarPulse 2s infinite ease-in-out;
+    flex-shrink: 0;
   }
+
+  .radar-ring {
+    transform-origin: center;
+    animation: radarSweep 3s infinite linear;
+  }
+
+  .radar-dot {
+    animation: dotBlink 1.2s infinite alternate ease-in-out;
+  }
+
+  @keyframes radarPulse {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--cyan)); opacity: 0.9; }
+    50% { filter: drop-shadow(0 0 9px var(--cyan)); opacity: 1; }
+  }
+
+  @keyframes radarSweep {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes dotBlink {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; fill: var(--green); }
+  }
+
   .brand-title{
     font-size: 0.95rem;
     font-weight: 800;
@@ -460,8 +489,14 @@
 
 <header>
   <div class="brand">
-    <div class="brand-dot"></div>
-    <span class="brand-title">NOTICIAS</span>
+    <!-- ICONO ANIMADO DE AVIACIÓN / RADAR -->
+    <svg class="brand-radar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" opacity="0.3"></circle>
+      <circle cx="12" cy="12" r="5" opacity="0.6"></circle>
+      <line class="radar-ring" x1="12" y1="12" x2="12" y2="3"></line>
+      <circle class="radar-dot" cx="15" cy="8" r="1.5" fill="#00f3ff"></circle>
+    </svg>
+    <span class="brand-title">BOLETÍN OFICIAL</span>
     <span class="brand-sub">Spotters Spain</span>
   </div>
   <button id="logout" class="secondary hide" style="padding:3px 8px; font-size:0.7rem;">Salir</button>
@@ -592,6 +627,7 @@ function linkify(text) {
 
 function say(el,s,bad=false){
   const target=$(el);
+
   if(target){
 
     target.textContent=s;
@@ -946,5 +982,6 @@ $('#next').onclick=()=>{
   load();
 };
 </script>
+<script src="app.js"></script>
 </body>
 </html>

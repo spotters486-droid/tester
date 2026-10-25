@@ -1,47 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
-<!-- CÓDIGO DEL BOTÓN FLOTANTE ATRÁS -->
-<style>
-  /* Botón Flotante Neón */
-  .btn-float-inicio {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 99999;
-    background: #0c102b;
-    color: #00ffcc;
-    border: 2px solid #00ffcc;
-    border-radius: 50px;
-    padding: 8px 16px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 0 12px rgba(0, 255, 204, 0.4), inset 0 0 8px rgba(0, 255, 204, 0.2);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.3s ease;
-  }
-
-  /* Efecto al pasar el cursor / tocar */
-  .btn-float-inicio:hover, .btn-float-inicio:active {
-    background: #00ffcc;
-    color: #050814;
-    box-shadow: 0 0 20px rgba(0, 255, 204, 0.9);
-    transform: scale(1.08) translateY(-2px);
-  }
-</style>
-
-<!-- Botón Flotante para volver a la página anterior -->
-<a href="#" class="btn-float-inicio" onclick="history.back(); return false;">
-  <i class="fa-solid fa-arrow-left"></i> Atrás
-</a>
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#050814">
@@ -103,7 +62,6 @@
             display: none;
         }
 
-        /* CAPA INVISIBLE PARA DESBLOQUEAR AUDIO */
         #audio-unlock-layer {
             position: fixed;
             inset: 0;
@@ -113,11 +71,11 @@
             display: none;
         }
     </style>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
 
 <body class="min-h-screen bg-darkBg text-slate-100 pb-16 antialiased flex flex-col justify-between">
 
-    <!-- CAPA INVISIBLE DE DESBLOQUEO DE AUDIO -->
     <div id="audio-unlock-layer"></div>
 
     <!-- CARTEL INFORMATIVO -->
@@ -172,39 +130,15 @@
 
             </div>
 
-            <div id="cache-status"
-                 class="flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 border border-slate-700/80 rounded-full text-[10px] text-slate-300 font-medium">
-
-                <span id="cache-dot"
-                      class="w-2 h-2 rounded-full bg-emerald-400"></span>
-
-                <span id="cache-label">
-                    Caché lista
-                </span>
-
+            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 border border-slate-700/80 rounded-full text-[10px] text-slate-300 font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>En vivo</span>
             </div>
+
         </div>
     </header>
 
     <main class="max-w-md mx-auto px-4 pt-4 space-y-5 w-full flex-grow">
-
-        <!-- BANNER DE SINCRONIZACIÓN -->
-        <div id="sync-banner"
-             class="hidden bg-slate-800/90 border border-blue-500/30 rounded-xl p-3 flex items-center justify-between text-xs shadow-md">
-
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-rotate text-blue-400 animate-spin"></i>
-                <span id="sync-msg" class="text-slate-300">
-                    Métricas e información actualizadas.
-                </span>
-            </div>
-
-            <button onClick="clearCacheAndReload()"
-                    class="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] rounded-lg font-medium transition-colors">
-                Refrescar
-            </button>
-
-        </div>
 
         <!-- MIEMBROS -->
         <section class="space-y-3">
@@ -240,17 +174,17 @@
                 <!-- FILTROS POR CATEGORÍA -->
                 <div class="flex items-center gap-1.5 overflow-x-auto c-scroll pb-1 text-[10px] font-medium z-10 relative">
 
-                    <button onClick="setFilter('all')"
+                    <button onClick="setFilter('all', event)"
                             class="filter-btn active px-2.5 py-1 rounded-lg bg-pink-600 text-white border border-pink-500 whitespace-nowrap transition-colors">
                         Todos
                     </button>
 
-                    <button onClick="setFilter('spotter')"
+                    <button onClick="setFilter('spotter', event)"
                             class="filter-btn px-2.5 py-1 rounded-lg bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors">
                         Spotters
                     </button>
 
-                    <button onClick="setFilter('bcn')"
+                    <button onClick="setFilter('bcn', event)"
                             class="filter-btn px-2.5 py-1 rounded-lg bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors">
                         LEBL / Barcelona
                     </button>
@@ -259,10 +193,6 @@
 
                 <!-- FILTRADO POR ABECEDARIO (A-Z) -->
                 <div class="flex items-center gap-1 overflow-x-auto c-scroll pb-1 text-[10px] font-semibold border-t border-slate-800/80 pt-2 z-10 relative" id="alphabet-bar">
-                    <button onClick="setAlphabetFilter('all')" class="alpha-btn active px-2 py-0.5 rounded bg-blue-600 text-white border border-blue-500 whitespace-nowrap transition-colors">
-                        A-Z
-                    </button>
-                    <!-- Los botones de la A a la Z se renderizan dinámicamente -->
                 </div>
 
                 <!-- TARJETAS DE PERFILES -->
@@ -277,9 +207,6 @@
 
 <script>
 
-/* =========================================================
-   FUNCIÓN PARA ABRIR EN NAVEGADOR EXTERNO (FUERA DE WEBVIEW)
-========================================================= */
 function openExternalUrl(event, url) {
     if (event) {
         event.preventDefault();
@@ -302,7 +229,6 @@ function openExternalUrl(event, url) {
     return false;
 }
 
-/* INTERCEPTOR GLOBAL DE CLICS PARA TODOS LOS VÍNCULOS <a> */
 document.addEventListener('click', function(e) {
     const link = e.target.closest('a');
     
@@ -320,10 +246,6 @@ document.addEventListener('click', function(e) {
     }
 }, true);
 
-
-/* =========================================================
-   DATOS AMPLIADOS CON MÁS CAMPOS Y CANALES ADICIONALES
-========================================================= */
 
 const MEMBERS_DATA = [
     {
@@ -405,435 +327,229 @@ const MEMBERS_DATA = [
     }
 ];
 
-const HUB_PAYLOAD = {
-    version: "4.1.0",
-    members: MEMBERS_DATA
-};
-
-
-/* =========================================================
-   CACHÉ & CONTROL DE ACTUALIZACIÓN DIARIA (24 HORAS)
-========================================================= */
-
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
-
-const CACHE_KEY = "spotters_hub_payload_v4.5";
-const TIME_KEY = "spotters_hub_time_v4.5";
-const DAILY_UPDATE_KEY = "spotters_hub_daily_metrics_time";
-
 let activeCategoryFilter = "all";
 let activeAlphabetFilter = "all";
 
-
-/* =========================================================
-   INICIO
-========================================================= */
-
 function initApp() {
-
     checkAndShowModal();
     renderAlphabetBar();
 
-    const now = Date.now();
-
-    const storedTime = localStorage.getItem(TIME_KEY);
-    const storedData = localStorage.getItem(CACHE_KEY);
-    const lastDailyCheck = localStorage.getItem(DAILY_UPDATE_KEY);
-
-    let data = HUB_PAYLOAD;
-    let isCached = false;
-
-    const needsDailyRefresh = !lastDailyCheck || (now - parseInt(lastDailyCheck, 10) > ONE_DAY_MS);
-
-    if (storedTime && storedData && !needsDailyRefresh) {
-
-        const elapsed = now - parseInt(storedTime, 10);
-
-        if (elapsed < TEN_DAYS_MS) {
-
-            try {
-
-                data = JSON.parse(storedData);
-                isCached = true;
-
-                updateStatus(true, parseInt(storedTime, 10));
-
-            } catch (e) {
-
-                console.warn("Error leyendo caché", e);
-
-            }
-        }
-    }
-
-    if (!isCached || needsDailyRefresh) {
-
-        data = HUB_PAYLOAD;
-
-        localStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify(HUB_PAYLOAD)
-        );
-
-        localStorage.setItem(
-            TIME_KEY,
-            now.toString()
-        );
-
-        localStorage.setItem(
-            DAILY_UPDATE_KEY,
-            now.toString()
-        );
-
-        updateStatus(false, now);
-    }
-
-    const sortedMembers =
-        sortMembers(data.members || MEMBERS_DATA);
-
+    // Carga directa de datos sin caché
+    const sortedMembers = sortMembers([...MEMBERS_DATA]);
     renderMembersCarousel(sortedMembers);
 }
 
-
-/* =========================================================
-   RENDERIZAR BARRA DE ABECEDARIO
-========================================================= */
-
 function renderAlphabetBar() {
     const alphaContainer = document.getElementById("alphabet-bar");
+    if (!alphaContainer) return;
+
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-    const buttonsHTML = alphabet.map(letter => `
-        <button onClick="setAlphabetFilter('${letter}')" 
+    let buttonsHTML = `
+        <button onClick="setAlphabetFilter('all', event)" class="alpha-btn active px-2 py-0.5 rounded bg-blue-600 text-white border border-blue-500 whitespace-nowrap transition-colors">
+            A-Z
+        </button>
+    `;
+
+    buttonsHTML += alphabet.map(letter => `
+        <button onClick="setAlphabetFilter('${letter}', event)" 
                 class="alpha-btn px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors">
             ${letter}
         </button>
     `).join('');
 
-    alphaContainer.innerHTML += buttonsHTML;
+    alphaContainer.innerHTML = buttonsHTML;
 }
-
-
-/* =========================================================
-   ESTADO CACHÉ
-========================================================= */
-
-function updateStatus(cached, timestamp) {
-
-    const label =
-        document.getElementById("cache-label");
-
-    const dot =
-        document.getElementById("cache-dot");
-
-    const daysAgo =
-        Math.floor(
-            (Date.now() - timestamp) /
-            (1000 * 60 * 60 * 24)
-        );
-
-    if (cached) {
-
-        label.textContent =
-            `Caché (${daysAgo}d)`;
-
-        dot.className =
-            "w-2 h-2 rounded-full bg-emerald-400";
-
-    } else {
-
-        label.textContent =
-            "Hoy actualiz.";
-
-        dot.className =
-            "w-2 h-2 rounded-full bg-blue-400 animate-pulse";
-    }
-}
-
-
-function clearCacheAndReload() {
-
-    localStorage.removeItem(CACHE_KEY);
-    localStorage.removeItem(TIME_KEY);
-    localStorage.removeItem(DAILY_UPDATE_KEY);
-
-    location.reload();
-}
-
-
-/* =========================================================
-   MIEMBROS
-========================================================= */
 
 function sortMembers(members) {
-
-    return members.sort(
-        (a, b) =>
-            a.username.localeCompare(b.username)
-    );
+    return members.sort((a, b) => a.username.localeCompare(b.username));
 }
 
-
 function renderMembersCarousel(members) {
+    const track = document.getElementById("members-carousel-track");
+    if (!track) return;
 
-    const track =
-        document.getElementById(
-            "members-carousel-track"
-        );
+    track.innerHTML = members.map(m => `
+        <div class="member-card-wrapper member-card"
+             data-username="${m.username.toLowerCase()}"
+             data-categories='${JSON.stringify(m.category)}'
+             data-search="${(m.username + ' ' + m.name + ' ' + m.location + ' ' + m.gear + ' ' + (m.specialty || '')).toLowerCase()}">
 
-    track.innerHTML =
-        members.map(m => `
+            <div class="flex flex-col justify-between gap-2.5 p-3.5 bg-slate-950 border border-slate-800 hover:border-pink-500/60 rounded-2xl transition-all group shadow-md w-[240px] relative overflow-hidden">
 
-            <div class="member-card-wrapper member-card"
-                 data-username="${m.username.toLowerCase()}"
-                 data-categories='${JSON.stringify(m.category)}'
-                 data-search="${(m.username + ' ' + m.name + ' ' + m.location + ' ' + m.gear + ' ' + (m.specialty || '')).toLowerCase()}">
-
-                <div class="flex flex-col justify-between gap-2.5 p-3.5 bg-slate-950 border border-slate-800 hover:border-pink-500/60 rounded-2xl transition-all group shadow-md w-[240px] relative overflow-hidden">
-
-                    <!-- INSIGNIA DE ESTADO DE ACTIVIDAD -->
-                    <div class="flex items-center justify-between text-[9px] border-b border-slate-800/80 pb-1.5">
-                        <span class="px-1.5 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-400 font-mono">
-                            ${m.id || 'SPT'}
-                        </span>
-                        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300">
-                            <span class="w-1.5 h-1.5 rounded-full ${m.statusColor || 'bg-blue-400'} animate-pulse"></span>
-                            <span class="font-medium">${m.status || 'Activo'}</span>
-                        </div>
+                <div class="flex items-center justify-between text-[9px] border-b border-slate-800/80 pb-1.5">
+                    <span class="px-1.5 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-400 font-mono">
+                        ${m.id || 'SPT'}
+                    </span>
+                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300">
+                        <span class="w-1.5 h-1.5 rounded-full ${m.statusColor || 'bg-blue-400'} animate-pulse"></span>
+                        <span class="font-medium">${m.status || 'Activo'}</span>
                     </div>
+                </div>
 
-                    <!-- CABECERA DE LA TARJETA: AVATAR Y USUARIO -->
-                    <div class="flex items-center gap-2.5">
-                        
-                        <a href="${m.url}" target="_system" class="relative w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                            <img src="${m.avatar}" 
-                                 alt="@${m.username}" 
-                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.username)}&background=1e293b&color=ec4899';"
-                                 class="w-full h-full object-cover rounded-full bg-slate-900">
+                <div class="flex items-center gap-2.5">
+                    <a href="${m.url}" target="_system" class="relative w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <img src="${m.avatar}" 
+                             alt="@${m.username}" 
+                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.username)}&background=1e293b&color=ec4899';"
+                             class="w-full h-full object-cover rounded-full bg-slate-900">
+                    </a>
+
+                    <div class="flex flex-col min-w-0">
+                        <a href="${m.url}" target="_system" class="flex items-center gap-1">
+                            <span class="text-xs font-bold text-slate-100 group-hover:text-pink-400 transition-colors truncate">
+                                ${m.name}
+                            </span>
                         </a>
-
-                        <div class="flex flex-col min-w-0">
-                            <a href="${m.url}" target="_system" class="flex items-center gap-1">
-                                <span class="text-xs font-bold text-slate-100 group-hover:text-pink-400 transition-colors truncate">
-                                    ${m.name}
-                                </span>
-                            </a>
-                            <span class="text-[10px] text-pink-500/90 font-semibold truncate">
-                                @${m.username}
-                            </span>
-                        </div>
-
+                        <span class="text-[10px] text-pink-500/90 font-semibold truncate">
+                            @${m.username}
+                        </span>
                     </div>
+                </div>
 
-                    <!-- TAG DE ESPECIALIDAD -->
-                    ${m.specialty ? `
-                    <div class="inline-flex items-center gap-1 text-[9px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md w-max">
-                        <i class="fa-solid fa-star text-[8px]"></i> ${m.specialty}
+                ${m.specialty ? `
+                <div class="inline-flex items-center gap-1 text-[9px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md w-max">
+                    <i class="fa-solid fa-star text-[8px]"></i> ${m.specialty}
+                </div>
+                ` : ''}
+
+                ${m.bio ? `
+                <p class="text-[10px] text-slate-400 leading-snug line-clamp-2 min-h-[28px]">
+                    ${m.bio}
+                </p>
+                ` : ''}
+
+                <div class="space-y-1 bg-slate-900/70 p-2 rounded-xl border border-slate-800/80 text-[10px]">
+                    <div class="flex items-center justify-between text-slate-300">
+                        <span class="text-slate-500 flex items-center gap-1">
+                            <i class="fa-solid fa-plane-arrival text-blue-400 text-[9px]"></i> Base
+                        </span>
+                        <span class="font-medium text-slate-200 truncate max-w-[110px]">
+                            ${m.location || 'N/A'}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-300">
+                        <span class="text-slate-500 flex items-center gap-1">
+                            <i class="fa-solid fa-camera text-indigo-400 text-[9px]"></i> Cuerpo
+                        </span>
+                        <span class="font-medium text-slate-300 truncate max-w-[110px]">
+                            ${m.gear || 'N/A'}
+                        </span>
+                    </div>
+                    ${m.lens ? `
+                    <div class="flex items-center justify-between text-slate-300">
+                        <span class="text-slate-500 flex items-center gap-1">
+                            <i class="fa-solid fa-circle-dot text-pink-400 text-[9px]"></i> Lente
+                        </span>
+                        <span class="font-medium text-slate-300 truncate max-w-[110px]">
+                            ${m.lens}
+                        </span>
                     </div>
                     ` : ''}
+                </div>
 
-                    <!-- BIOGRAFÍA CORTA -->
-                    ${m.bio ? `
-                    <p class="text-[10px] text-slate-400 leading-snug line-clamp-2 min-h-[28px]">
-                        ${m.bio}
-                    </p>
-                    ` : ''}
-
-                    <!-- DETALLES DE UBICACIÓN, EQUIPO Y OBJETIVO -->
-                    <div class="space-y-1 bg-slate-900/70 p-2 rounded-xl border border-slate-800/80 text-[10px]">
-                        <div class="flex items-center justify-between text-slate-300">
-                            <span class="text-slate-500 flex items-center gap-1">
-                                <i class="fa-solid fa-plane-arrival text-blue-400 text-[9px]"></i> Base
-                            </span>
-                            <span class="font-medium text-slate-200 truncate max-w-[110px]">
-                                ${m.location || 'N/A'}
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between text-slate-300">
-                            <span class="text-slate-500 flex items-center gap-1">
-                                <i class="fa-solid fa-camera text-indigo-400 text-[9px]"></i> Cuerpo
-                            </span>
-                            <span class="font-medium text-slate-300 truncate max-w-[110px]">
-                                ${m.gear || 'N/A'}
-                            </span>
-                        </div>
-                        ${m.lens ? `
-                        <div class="flex items-center justify-between text-slate-300">
-                            <span class="text-slate-500 flex items-center gap-1">
-                                <i class="fa-solid fa-circle-dot text-pink-400 text-[9px]"></i> Lente
-                            </span>
-                            <span class="font-medium text-slate-300 truncate max-w-[110px]">
-                                ${m.lens}
-                            </span>
-                        </div>
-                        ` : ''}
+                <div class="flex items-center justify-between text-[10px] border-t border-slate-800/80 pt-2 text-slate-400 font-medium">
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center gap-1 text-slate-200">
+                            <i class="fa-solid fa-users text-pink-500 text-[9px]"></i> ${m.followers || '-'}
+                        </span>
+                        <span class="flex items-center gap-1 text-slate-400">
+                            <i class="fa-solid fa-images text-slate-500 text-[9px]"></i> ${m.posts || '-'}
+                        </span>
                     </div>
 
-                    <!-- MÉTRICAS Y ENLACES SECUNDARIOS -->
-                    <div class="flex items-center justify-between text-[10px] border-t border-slate-800/80 pt-2 text-slate-400 font-medium">
-                        <div class="flex items-center gap-2">
-                            <span class="flex items-center gap-1 text-slate-200">
-                                <i class="fa-solid fa-users text-pink-500 text-[9px]"></i> ${m.followers || '-'}
-                            </span>
-                            <span class="flex items-center gap-1 text-slate-400">
-                                <i class="fa-solid fa-images text-slate-500 text-[9px]"></i> ${m.posts || '-'}
-                            </span>
-                        </div>
-
-                        <!-- REDES ADICIONALES & INSTAGRAM -->
-                        <div class="flex items-center gap-2">
-                            ${(m.extraLinks || []).map(link => `
-                                <a href="${link.url}" target="_system" class="text-slate-400 hover:text-white transition-colors">
-                                    <i class="${link.icon} text-xs"></i>
-                                </a>
-                            `).join('')}
-                            <a href="${m.url}" target="_system" class="text-pink-500 hover:scale-125 transition-transform">
-                                <i class="fa-brands fa-instagram text-xs"></i>
+                    <div class="flex items-center gap-2">
+                        ${(m.extraLinks || []).map(link => `
+                            <a href="${link.url}" target="_system" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="${link.icon} text-xs"></i>
                             </a>
-                        </div>
+                        `).join('')}
+                        <a href="${m.url}" target="_system" class="text-pink-500 hover:scale-125 transition-transform">
+                            <i class="fa-brands fa-instagram text-xs"></i>
+                        </a>
                     </div>
-
                 </div>
 
             </div>
 
-        `).join('');
+        </div>
+    `).join('');
 }
 
-
 function filterMembers() {
-
-    const query =
-        document
-            .getElementById("member-search")
-            .value
-            .toLowerCase();
-
-    const cards =
-        document.querySelectorAll(".member-card");
+    const searchInput = document.getElementById("member-search");
+    const query = searchInput ? searchInput.value.toLowerCase() : "";
+    const cards = document.querySelectorAll(".member-card");
 
     cards.forEach(card => {
-
         const username = card.getAttribute("data-username") || "";
         const searchData = card.getAttribute("data-search") || "";
-
-        const categories =
-            JSON.parse(
-                card.getAttribute("data-categories") || "[]"
-            );
+        const categories = JSON.parse(card.getAttribute("data-categories") || "[]");
 
         const matchesText = searchData.includes(query);
+        const matchesCategory = activeCategoryFilter === "all" || categories.includes(activeCategoryFilter);
+        const matchesAlphabet = activeAlphabetFilter === "all" || username.startsWith(activeAlphabetFilter.toLowerCase());
 
-        const matchesCategory =
-            activeCategoryFilter === "all" ||
-            categories.includes(activeCategoryFilter);
-
-        const matchesAlphabet =
-            activeAlphabetFilter === "all" ||
-            username.startsWith(activeAlphabetFilter.toLowerCase());
-
-        card.style.display =
-            (matchesText && matchesCategory && matchesAlphabet)
-                ? "block"
-                : "none";
+        card.style.display = (matchesText && matchesCategory && matchesAlphabet) ? "block" : "none";
     });
 }
 
-
-function setFilter(cat) {
-
+function setFilter(cat, evt) {
     activeCategoryFilter = cat;
 
-    document.querySelectorAll(".filter-btn")
-        .forEach(btn => {
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.className = "filter-btn px-2.5 py-1 rounded-lg bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors";
+    });
 
-            btn.className =
-                "filter-btn px-2.5 py-1 rounded-lg bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors";
-
-        });
-
-    event.target.className =
-        "filter-btn active px-2.5 py-1 rounded-lg bg-pink-600 text-white border border-pink-500 whitespace-nowrap transition-colors";
+    if (evt && evt.target) {
+        evt.target.className = "filter-btn active px-2.5 py-1 rounded-lg bg-pink-600 text-white border border-pink-500 whitespace-nowrap transition-colors";
+    }
 
     filterMembers();
 }
 
-
-function setAlphabetFilter(letter) {
-
+function setAlphabetFilter(letter, evt) {
     activeAlphabetFilter = letter;
 
-    document.querySelectorAll(".alpha-btn")
-        .forEach(btn => {
+    document.querySelectorAll(".alpha-btn").forEach(btn => {
+        btn.className = "alpha-btn px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors";
+    });
 
-            btn.className =
-                "alpha-btn px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 whitespace-nowrap transition-colors";
-
-        });
-
-    event.target.className =
-        "alpha-btn active px-2 py-0.5 rounded bg-blue-600 text-white border border-blue-500 whitespace-nowrap transition-colors";
+    if (evt && evt.target) {
+        evt.target.className = "alpha-btn active px-2 py-0.5 rounded bg-blue-600 text-white border border-blue-500 whitespace-nowrap transition-colors";
+    }
 
     filterMembers();
 }
 
-
-/* =========================================================
-   SISTEMA DE VOZ
-========================================================= */
-
+/* SISTEMA DE VOZ */
 let voiceUnlocked = false;
 let voiceStarted = false;
 let voiceText = "";
 
-
 function loadVoices() {
-
-    if (!("speechSynthesis" in window)) {
-        return [];
-    }
-
+    if (!("speechSynthesis" in window)) return [];
     return window.speechSynthesis.getVoices();
 }
 
-
 function getSpanishVoice() {
-
     const voices = loadVoices();
-
-    return voices.find(v =>
-        v.lang &&
-        v.lang.toLowerCase().startsWith("es")
-    ) || null;
+    return voices.find(v => v.lang && v.lang.toLowerCase().startsWith("es")) || null;
 }
 
-
 function speakInfoText() {
+    if (!("speechSynthesis" in window) || voiceStarted) return;
 
-    if (!("speechSynthesis" in window)) {
-        console.warn("Speech Synthesis no disponible.");
-        return;
-    }
+    const speechElem = document.getElementById("speech-text");
+    if (!speechElem) return;
 
-    if (voiceStarted) {
-        return;
-    }
-
-    const text =
-        document.getElementById("speech-text").innerText;
-
+    const text = speechElem.innerText;
     voiceText = text;
 
     try {
-
         window.speechSynthesis.cancel();
-
-        const utterance =
-            new SpeechSynthesisUtterance(text);
-
-        const spanishVoice =
-            getSpanishVoice();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const spanishVoice = getSpanishVoice();
 
         if (spanishVoice) {
             utterance.voice = spanishVoice;
@@ -846,238 +562,83 @@ function speakInfoText() {
         utterance.pitch = 1;
         utterance.volume = 1;
 
-        utterance.onstart = function () {
-
-            voiceStarted = true;
-
-            console.log(
-                "🔊 Voz iniciada correctamente"
-            );
-        };
-
-        utterance.onend = function () {
-
-            console.log(
-                "🔊 Voz finalizada"
-            );
-        };
-
-        utterance.onerror = function (event) {
-
-            console.warn(
-                "⚠️ Error de voz:",
-                event.error
-            );
-
-            voiceStarted = false;
-        };
+        utterance.onstart = function () { voiceStarted = true; };
+        utterance.onerror = function () { voiceStarted = false; };
 
         window.speechSynthesis.speak(utterance);
-
     } catch (error) {
-
-        console.warn(
-            "⚠️ Error ejecutando voz:",
-            error
-        );
-
         voiceStarted = false;
     }
 }
 
-
 function unlockVoice() {
-
-    if (voiceUnlocked) {
-        return;
-    }
-
+    if (voiceUnlocked) return;
     voiceUnlocked = true;
 
-    console.log(
-        "📱 Interacción detectada. Desbloqueando voz..."
-    );
+    if (!("speechSynthesis" in window)) return;
 
-    if (!("speechSynthesis" in window)) {
-        return;
-    }
-
-    const text =
-        voiceText ||
-        document.getElementById("speech-text")?.innerText;
-
-    if (!text) {
-        return;
-    }
+    const speechElem = document.getElementById("speech-text");
+    const text = voiceText || (speechElem ? speechElem.innerText : "");
+    if (!text) return;
 
     try {
-
         window.speechSynthesis.cancel();
+        const voice = getSpanishVoice();
+        const unlockUtterance = new SpeechSynthesisUtterance(text);
 
-        const voice =
-            getSpanishVoice();
-
-        const unlockUtterance =
-            new SpeechSynthesisUtterance(text);
-
-        unlockUtterance.lang =
-            voice ? voice.lang : "es-ES";
-
+        unlockUtterance.lang = voice ? voice.lang : "es-ES";
         unlockUtterance.rate = 0.95;
         unlockUtterance.pitch = 1;
         unlockUtterance.volume = 1;
 
-        if (voice) {
-            unlockUtterance.voice = voice;
-        }
+        if (voice) unlockUtterance.voice = voice;
 
-        unlockUtterance.onstart = function () {
+        unlockUtterance.onstart = function () { voiceStarted = true; };
+        unlockUtterance.onerror = function () { voiceStarted = false; };
 
-            voiceStarted = true;
-
-            console.log(
-                "🔊 Voz desbloqueada por interacción"
-            );
-        };
-
-        unlockUtterance.onerror = function () {
-
-            voiceStarted = false;
-        };
-
-        window.speechSynthesis.speak(
-            unlockUtterance
-        );
-
-    } catch (e) {
-
-        console.warn(
-            "No se pudo desbloquear la voz:",
-            e
-        );
-    }
+        window.speechSynthesis.speak(unlockUtterance);
+    } catch (e) {}
 }
 
-
-document.addEventListener(
-    "touchstart",
-    function () {
-
-        unlockVoice();
-
-    },
-    {
-        once: true,
-        passive: true
-    }
-);
-
-
-document.addEventListener(
-    "mousedown",
-    function () {
-
-        unlockVoice();
-
-    },
-    {
-        once: true
-    }
-);
-
+document.addEventListener("touchstart", function () { unlockVoice(); }, { once: true, passive: true });
+document.addEventListener("mousedown", function () { unlockVoice(); }, { once: true });
 
 if ("speechSynthesis" in window) {
-
-    window.speechSynthesis.onvoiceschanged =
-        function () {
-
-            loadVoices();
-
-            console.log(
-                "🎙️ Voces cargadas:",
-                window.speechSynthesis.getVoices().length
-            );
-        };
-
+    window.speechSynthesis.onvoiceschanged = function () { loadVoices(); };
     loadVoices();
 }
 
-
-/* =========================================================
-   MODAL
-========================================================= */
-
+/* MODAL */
 function checkAndShowModal() {
-
-    const modalShown =
-        sessionStorage.getItem(
-            "spotters_hub_modal_shown_v1"
-        );
+    const modalShown = sessionStorage.getItem("spotters_hub_modal_shown_v1");
 
     if (!modalShown) {
-
         setTimeout(function () {
-
-            const modal =
-                document.getElementById(
-                    "info-modal"
-                );
-
-            modal.classList.remove(
-                "opacity-0",
-                "pointer-events-none"
-            );
-
-            speakInfoText();
-
-            sessionStorage.setItem(
-                "spotters_hub_modal_shown_v1",
-                "true"
-            );
-
+            const modal = document.getElementById("info-modal");
+            if (modal) {
+                modal.classList.remove("opacity-0", "pointer-events-none");
+                speakInfoText();
+                sessionStorage.setItem("spotters_hub_modal_shown_v1", "true");
+            }
         }, 5000);
     }
 }
 
-
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
-
 function closeInfoModal() {
-
     if ("speechSynthesis" in window) {
-
         window.speechSynthesis.cancel();
-
     }
 
-    const modal =
-        document.getElementById("info-modal");
-
-    modal.classList.add(
-        "opacity-0",
-        "pointer-events-none"
-    );
-
-    setTimeout(function () {
-
-        if (modal) {
+    const modal = document.getElementById("info-modal");
+    if (modal) {
+        modal.classList.add("opacity-0", "pointer-events-none");
+        setTimeout(function () {
             modal.remove();
-        }
-
-    }, 300);
+        }, 300);
+    }
 }
 
-
-/* =========================================================
-   DOM READY
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    initApp
-);
+document.addEventListener("DOMContentLoaded", initApp);
 
 </script>
 
