@@ -733,7 +733,6 @@
       text-shadow: 0 0 8px var(--neon-cyan);
     }
 
-    /* BADGE COMPACTO EN VIVO AL LADO DEL TÍTULO METEO */
     .live-status-pill {
       font-family: 'Orbitron', sans-serif;
       font-size: 0.52rem;
@@ -857,7 +856,6 @@
       margin-top: 3px;
     }
 
-    /* ESTILOS PARA EL ROTADOR DE TITULARES */
     .news-headlines-wrapper {
       margin-top: 10px;
       background: rgba(3, 8, 22, 0.75);
@@ -1035,7 +1033,6 @@
       box-shadow: 0 0 12px var(--neon-cyan), 0 0 8px var(--neon-green);
     }
 
-    /* BOTONES EMBEBIDOS ULTRA COMPACTOS (INFORMACIÓN Y CAMPANA) */
     .embedded-info-btn {
       position: relative;
       top: 0;
@@ -1379,7 +1376,7 @@
         <i class="fa-solid fa-plane info-plane-icon"></i>
       </a>
 
-      <!-- BOTÓN DE NOTIFICACIONES PUSH -->
+      <!-- BOTÓN DE NOTIFICACIONES PUSH MANUALES -->
       <button id="btn-activar-push" onclick="solicitarPermisoPushManual()" title="Activar Notificaciones Push" class="embedded-info-btn" style="border-color: #00d2ff; box-shadow: 0 0 8px rgba(0, 210, 255, 0.7); cursor: pointer;">
         <i class="fa-solid fa-bell" style="font-size: 0.65rem; color: #00d2ff; filter: drop-shadow(0 0 3px rgba(0, 210, 255, 0.9));"></i>
       </button>
@@ -2195,7 +2192,16 @@
     window.addEventListener('load', checkAndShowWhatsAppNotification);
   </script>
 
-  <!-- REGISTRO DE NOTIFICACIONES PUSH -->
+  <!-- REGISTRO DEL SERVICE WORKER SIN SOLICITUD AUTOMÁTICA DE PERMISOS -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('Service Worker registrado correctamente'))
+          .catch(err => console.error('Error al registrar Service Worker:', err));
+      });
+    }
+  </script>
   <script src="./app.js"></script>
 
   <!-- CUADRO DE CONSOLA DE DEPURACIÓN VISUAL -->
