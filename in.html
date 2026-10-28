@@ -1864,10 +1864,10 @@
 
     async function initHeadlinesFromSupabase() {
       try {
-        // Consultamos la tabla 'news' seleccionando el campo 'title'
+        // Consultamos todos los campos de la tabla 'news' para evitar errores de columnas
         const { data, error } = await supabaseClient
           .from('news')
-          .select('title, body');
+          .select('*');
 
         if (error) {
           console.error("Error al obtener noticias de Supabase:", error);
@@ -1880,7 +1880,7 @@
           aviationNewsData = data.map(item => ({
             title: item.title || "Titular sin título",
             source: "Spotters Spain",
-            description: item.body || item.title || "Sin descripción adicional."
+            description: item.description || item.body || item.content || item.title || "Sin descripción adicional."
           }));
         } else {
           aviationNewsData = [{
@@ -2079,6 +2079,7 @@
       if (selected === correct) {
         btn.classList.add('correct');
         btn.querySelector('i').className = 'fa-solid fa-circle-check text-emerald-400';
+
         gameScore += 100;
         document.getElementById('game-score').textContent = gameScore;
         feedback.className = 'text-xs font-bold mb-3 text-emerald-400';
