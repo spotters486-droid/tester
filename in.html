@@ -1,10 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Spotters Spain - Aviación & Spotting</title>
-</head>
-<body>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -38,9 +31,6 @@
       --chart-line: rgba(0, 210, 255, 0.12);
     }
 
-    /* =========================================================
-        TEMAS FESTIVOS AUTOMÁTICOS (ESPAÑA & CATALUÑA)
-    ========================================================= */
     body.theme-christmas {
       --bg-dark: #050d1a;
       --neon-cyan: #ff3366;
@@ -742,7 +732,6 @@
       text-shadow: 0 0 8px var(--neon-cyan);
     }
 
-    /* BADGE COMPACTO EN VIVO AL LADO DEL TÍTULO METEO */
     .live-status-pill {
       font-family: 'Orbitron', sans-serif;
       font-size: 0.52rem;
@@ -866,7 +855,6 @@
       margin-top: 3px;
     }
 
-    /* ESTILOS PARA EL ROTADOR DE TITULARES */
     .news-headlines-wrapper {
       margin-top: 10px;
       background: rgba(3, 8, 22, 0.75);
@@ -1043,7 +1031,6 @@
       box-shadow: 0 0 12px var(--neon-cyan), 0 0 8px var(--neon-green);
     }
 
-    /* BOTÓN ULTRA COMPACTO CON ICONO DE AVIÓN AMARILLO */
     .embedded-info-btn {
       position: absolute;
       top: -10px;
@@ -1183,7 +1170,6 @@
     <header class="hero-banner">
       <div class="hero-nautical-overlay"></div>
       
-      <!-- Capa de Aviones Volando en el Banner -->
       <div class="banner-plane-layer">
         <div class="flying-plane plane-anim-1">
           <i class="fa-solid fa-plane"></i>
@@ -1202,7 +1188,6 @@
       <div class="stripe-top-left"></div>
       <div class="stripe-bottom-right"></div>
       
-      <!-- CONTENEDOR PRINCIPAL DEL BANNER -->
       <div class="relative z-10 flex items-center gap-3">
         <div class="emblem-wrapper">
           <div class="radar-outer-ring">
@@ -1223,8 +1208,7 @@
           <p class="text-[0.7rem] sm:text-xs text-slate-200 font-medium leading-tight whitespace-nowrap mt-0.5 drop-shadow">
             la aviación de España en tu bolsillo.
           </p>
-          <!-- CARTELES DE FESTIVIDAD AUTOMÁTICOS -->
-          <div id="holiday-badge" class="holiday-doodle-badge">
+          <div id="holiday-badge" class="holiday-doodle-badge" style="display: none;">
             <i class="fa-solid fa-sparkles mr-1"></i> <span id="holiday-title"></span>
           </div>
         </div>
@@ -1232,8 +1216,6 @@
     </header>
 
     <main class="grid-container">
-
-      <!-- 1. Radar T Real (Rojo Neón) -->
       <a href="radar_trafico.html" class="card card-radar" title="Radar T Real">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-crosshairs"></i></div>
@@ -1241,7 +1223,6 @@
         <div class="card-title">Radar T Real</div>
       </a>
 
-      <!-- 2. Mapa Spotting (Verde Esmeralda Neón) -->
       <a href="p_spotting.html" class="card card-mapa" title="Mapa spotting">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
@@ -1249,7 +1230,6 @@
         <div class="card-title">Mapa spotting</div>
       </a>
 
-      <!-- 3. Meteorología (Amarillo Neón) -->
       <a href="meteorologia.html" class="card card-meteo" title="Meteorología">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-cloud-sun-rain"></i></div>
@@ -1257,7 +1237,6 @@
         <div class="card-title">Meteorología</div>
       </a>
 
-      <!-- 4. Noticias (Azul Neón) -->
       <a href="noticias.html" class="card card-noticias" title="Noticias">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-newspaper"></i></div>
@@ -1265,7 +1244,6 @@
         <div class="card-title">Noticias</div>
       </a>
 
-      <!-- 5. Aerolíneas (Cian Neón) -->
       <a href="aerolineas.html" class="card card-aerolineas" title="Aerolíneas">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-plane-departure"></i></div>
@@ -1273,7 +1251,6 @@
         <div class="card-title">Aerolíneas</div>
       </a>
 
-      <!-- 6. Sim. Fotografía (Rosa Neón) -->
       <a href="simulacion_fotos.html" class="card card-simfoto" title="Sim. Fotografía">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-camera-retro"></i></div>
@@ -1281,7 +1258,6 @@
         <div class="card-title">Sim. Fotografía</div>
       </a>
 
-      <!-- 7. Info. Aeropuerto (Púrpura Neón) -->
       <a href="info_aeropu.html" class="card card-infoaeropuerto" title="Info. Aeropuerto">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-plane-arrival"></i></div>
@@ -1289,7 +1265,6 @@
         <div class="card-title">Info. Aeropuerto</div>
       </a>
 
-      <!-- 8. Enlaces externos (Naranja Neón) -->
       <a href="enlaces.html" class="card card-enlaces" title="Enlaces externos">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
@@ -1297,32 +1272,26 @@
         <div class="card-title">Enlaces externos</div>
       </a>
 
-      <!-- 9. Avistamientos (Verde Lima Neón) -->
       <a href="avistament.html" class="card card-avistamientos" title="Avistamientos">
         <div class="icon-wrapper">
           <div class="icon-box"><i class="fa-solid fa-eye"></i></div>
         </div>
         <div class="card-title">Avistamientos</div>
       </a>
-
     </main>
 
-    <!-- METEOSPOTTERS CON SOL/LUNA DINÁMICOS REALISTAS -->
     <section class="meteo-section" id="meteo-section">
-      <!-- CAPA DE FONDO DEL CIELO CON ESTRELLAS Y ASTRO -->
       <div class="meteo-sky-bg" id="meteo-sky-bg">
         <div class="meteo-stars"></div>
         <div class="astro-body" id="astro-body"></div>
       </div>
 
-      <!-- CONTENIDO PRINCIPAL DE METEO -->
       <div class="meteo-content-relative">
         <div class="meteo-header">
           <div class="meteo-title-group">
             <div class="meteo-title">
               <i class="fa-solid fa-cloud-bolt text-yellow-400"></i> MeteoSpotters
             </div>
-            <!-- ELEMENTO EN VIVO INTEGRADO -->
             <div class="live-status-pill" id="live-refresh-btn" title="Click para ver la meteorología completa">
               <span class="live-pulse-dot"></span> EN VIVO
             </div>
@@ -1368,7 +1337,6 @@
           </div>
         </div>
 
-        <!-- PRINCIPALES TITULARES DE AVIACIÓN -->
         <div class="news-headlines-wrapper" id="btn-open-news-modal" title="Haz clic para ver el cartel de la noticia completa">
           <div class="news-headline-badge">
             <i class="fa-solid fa-newspaper mr-1"></i> TITULARES
@@ -1381,7 +1349,6 @@
       </div>
     </section>
 
-    <!-- FOOTER CON BOTÓN AMARILLO DE PEQUEÑO AVIÓN INTEGRADO -->
     <footer class="footer-neon">
       <a href="acerca.html" class="embedded-info-btn" title="Acerca de Spotters Spain">
         <i class="fa-solid fa-plane info-plane-icon"></i>
@@ -1391,7 +1358,6 @@
 
   </div>
 
-  <!-- BUBBLE / MENSAJE TIPO WHATSAPP FUTURISTA -->
   <div id="wa-info-toast" class="whatsapp-futuristic-toast">
     <div class="toast-header">
       <span class="toast-title"><i class="fa-brands fa-whatsapp"></i> Spotters Bot</span>
@@ -1402,7 +1368,6 @@
     </div>
   </div>
 
-  <!-- MODAL METEOSPOTTERS (RESUMEN GENERAL DE TODOS LOS AEROPUERTOS) -->
   <div id="modal-meteo-all" class="modal-backdrop">
     <div class="modal-card border-cyan-400 shadow-cyan-400/40 max-w-lg text-left">
       <div class="flex justify-between items-center mb-3 pb-2 border-b border-cyan-500/30">
@@ -1430,7 +1395,6 @@
     </div>
   </div>
 
-  <!-- MODAL NOTICIA COMPLETA (CARTEL DE NOTICIA AL TOCAR EL TITULAR) -->
   <div id="modal-news-detail" class="modal-backdrop">
     <div class="modal-card border-blue-400 shadow-blue-400/40 max-w-md text-left">
       <div class="flex justify-between items-center mb-3 pb-2 border-b border-blue-500/30">
@@ -1463,7 +1427,6 @@
     </div>
   </div>
 
-  <!-- MODAL 1: PREGUNTA DE INACTIVIDAD -->
   <div id="modal-prompt" class="modal-backdrop">
     <div class="modal-card">
       <div class="text-4xl text-cyan-400 mb-3"><i class="fa-solid fa-gamepad"></i></div>
@@ -1481,10 +1444,8 @@
     </div>
   </div>
 
-  <!-- MODAL 2: JUEGO AERO NEON -->
   <div id="modal-game" class="modal-backdrop">
     <div class="modal-card border-emerald-400 shadow-emerald-400/40">
-      
       <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-700">
         <div class="game-badge m-0">
           <i class="fa-solid fa-plane-departure"></i> AERO NEON
@@ -1497,9 +1458,7 @@
       <div id="quiz-box">
         <div class="text-xs text-slate-400 mb-2 text-left" id="quiz-category">Categoría: Aviación General</div>
         <h4 class="text-sm font-bold text-white text-left mb-4" id="quiz-question">Cargando pregunta...</h4>
-
         <div id="quiz-options" class="mb-4"></div>
-
         <div id="quiz-feedback" class="text-xs font-bold mb-3 min-h-[18px]"></div>
       </div>
 
@@ -1509,14 +1468,10 @@
           Cerrar Juego
         </button>
       </div>
-
     </div>
   </div>
 
   <script>
-    /* =========================================================
-        MOTOR DE CELEBRACIONES DE ESPAÑA Y CATALUÑA
-    ========================================================= */
     function calculateEaster(year) {
       const a = year % 19;
       const b = Math.floor(year / 100);
@@ -1567,7 +1522,6 @@
       const today = new Date();
       const month = today.getMonth();
       const day = today.getDate();
-
       const activeHoliday = ALL_HOLIDAYS.find(h => h.match(month, day));
 
       document.body.className = '';
@@ -1578,7 +1532,6 @@
         document.body.classList.add(`theme-${activeHoliday.id}`);
         badge.style.display = 'inline-flex';
         titleSpan.textContent = activeHoliday.name;
-        
         if (activeHoliday.id === 'christmas') {
           startSnowEffect();
         } else {
@@ -1637,9 +1590,6 @@
 
     applyAutomaticHolidayTheme();
 
-    /* =========================================================
-        MOTOR ULTRA REALISTA: SOL Y LUNA ÓRBITA DINÁMICA
-    ========================================================= */
     function updateMeteoSunMoon() {
       const astro = document.getElementById('astro-body');
       const skyBg = document.getElementById('meteo-sky-bg');
@@ -1649,7 +1599,6 @@
 
       const now = new Date();
       const hours = now.getHours() + now.getMinutes() / 60;
-
       const isDay = hours >= 6 && hours < 18;
       
       let progress = 0;
@@ -1666,10 +1615,8 @@
 
       const boxWidth = meteoBox.clientWidth || 340;
       const boxHeight = meteoBox.clientHeight || 200;
-
       const paddingX = 28;
       const posX = paddingX + progress * (boxWidth - (paddingX * 2));
-
       const arcHeight = boxHeight * 0.52; 
       const baseY = boxHeight - 22; 
       const posY = baseY - Math.sin(progress * Math.PI) * arcHeight;
@@ -1682,9 +1629,6 @@
     setInterval(updateMeteoSunMoon, 30000);
     window.addEventListener('resize', updateMeteoSunMoon);
 
-    /* =========================================================
-        2. METEOROLOGÍA & TIPS SPOTTER EN TIEMPO REAL
-    ========================================================= */
     const AIRPORTS = {
       LEBL: { name: "Barcelona", lat: 41.297, lon: 2.078 },
       LEMD: { name: "Madrid", lat: 40.472, lon: -3.561 },
@@ -1702,7 +1646,6 @@
 
       try {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${apt.lat}&longitude=${apt.lon}&current=temperature_2m,relative_humidity_2m,cloud_cover,wind_speed_10m,wind_gusts_10m,precipitation,weather_code,visibility&wind_speed_unit=kn`;
-        
         const res = await fetch(url, { cache: 'no-store' });
         const data = await res.json();
         const current = data.current;
@@ -1721,7 +1664,6 @@
         document.getElementById('m-cloud').textContent = `${cloud}%`;
 
         generateSingleSpotterTip(temp, wind, gusts, parseFloat(vis), cloud, precip, wCode);
-
       } catch (e) {
         document.getElementById('m-temp').textContent = `--°C`;
         document.getElementById('m-wind').textContent = `-- kt`;
@@ -1731,7 +1673,6 @@
       }
     }
 
-    /* CARGAR TODOS LOS AEROPUERTOS PARA EL CARTEL */
     async function loadAllAirportsMeteo() {
       const container = document.getElementById('all-airports-meteo-container');
       container.innerHTML = '<div class="text-xs text-slate-400 text-center py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Actualizando red de aeropuertos...</div>';
@@ -1782,33 +1723,27 @@
 
     function generateSingleSpotterTip(temp, wind, gusts, vis, cloud, precip, wCode) {
       const tips = [];
-
       if (precip > 0.1 || wCode >= 51) {
         tips.push("<strong>Pista Mojada / Lluvia:</strong> Captura el efecto spray en las ruedas al frenar y reflejos en el asfalto. Cierra diafragma a f/5.6 y protege la cámara.");
       }
-
       if (temp >= 25) {
         tips.push(`<strong>Calor elevado (${temp}°C):</strong> Posible distorsión térmica (Heat Haze) sobre la pista. Usa focales cortas o toma la foto en el punto de contacto más cercano.`);
       } else if (temp <= 8) {
         tips.push(`<strong>Ambiente Frío (${temp}°C):</strong> El aire denso favorece nitidez alta. Vigila la condensación en las lentes al salir del vehículo.`);
       }
-
       if (vis < 5) {
         tips.push(`<strong>Baja Visibilidad (${vis} km):</strong> Ambiente de niebla/bruma. Usa la luz de aterrizaje de los aviones como punto focal y contrasta en postproducción.`);
       }
-
       if (gusts > 20 || wind > 15) {
         tips.push(`<strong>Viento Cruzado / Rachas (${gusts} kt):</strong> Correcciones de deriva dinámicas al aterrizar. Dispara rápido (1/1000s o superior).`);
       } else {
         tips.push("<strong>Viento Calmo:</strong> Condiciones idóneas para practicar barridos (Panning) en carrera de despegue (1/40s a 1/80s).");
       }
-
       if (cloud > 75) {
         tips.push("<strong>Cielo Cubierto:</strong> Luz difusa sin sombras duras en el vientre del avión. Sube el ISO a 400-800.");
       } else if (cloud <= 25) {
         tips.push("<strong>Sol Directo:</strong> Posiciónate con el sol a la espalda para evitar contraluces intensos en el fuselaje.");
       }
-
       if (tips.length === 0) {
         tips.push("<strong>Condiciones Estables:</strong> Buen momento para fotos de aproximación y detalle de libreas.");
       }
@@ -1822,7 +1757,6 @@
       loadMeteoData(e.target.value);
     });
 
-    /* EVENTOS PARA ABRIR Y CERRAR EL CARTEL DE METEOROLOGÍA RED COMPLETA */
     document.getElementById('live-refresh-btn').addEventListener('click', () => {
       document.getElementById('modal-meteo-all').classList.add('active');
       loadAllAirportsMeteo();
@@ -1844,7 +1778,7 @@
     }, 10 * 60 * 1000);
 
     /* =========================================================
-        MOTOR DE TITULARES DESDE SUPABASE Y MODAL INTERACTIVO
+        CONEXIÓN SUPABASE & TITULARES
     ========================================================= */
     const SUPABASE_URL = 'https://oxqgceyugjahicnqqtsg.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_lgtVKnJK13fqwR2xIazsiA_nXRcwO_T';
@@ -1864,7 +1798,6 @@
 
     async function initHeadlinesFromSupabase() {
       try {
-        // Consultamos todos los campos de la tabla 'news' para evitar errores de columnas
         const { data, error } = await supabaseClient
           .from('news')
           .select('*');
@@ -1928,32 +1861,24 @@
       }, 5000);
     }
 
-    /* ABRIR Y CERRAR CARTEL DE LA NOTICIA AL HACER CLIC EN EL TITULAR */
     function openNewsModal() {
       const currentNews = aviationNewsData[headlineIndex] || aviationNewsData[0];
-      
       document.getElementById('news-modal-source').textContent = currentNews.source || "Base de Datos Supabase";
       document.getElementById('news-modal-title').textContent = currentNews.title;
       document.getElementById('news-modal-body').textContent = currentNews.description || "Consulta la sección de noticias para más información.";
-      
       document.getElementById('modal-news-detail').classList.add('active');
     }
 
     document.getElementById('btn-open-news-modal').addEventListener('click', openNewsModal);
-
     document.getElementById('btn-close-news-modal').addEventListener('click', () => {
       document.getElementById('modal-news-detail').classList.remove('active');
     });
-
     document.getElementById('btn-close-news-modal-footer').addEventListener('click', () => {
       document.getElementById('modal-news-detail').classList.remove('active');
     });
 
     initHeadlinesFromSupabase();
 
-    /* =========================================================
-        3. DETECTOR DE INACTIVIDAD (30 SEGUNDOS)
-    ========================================================= */
     let idleTimer = null;
     let quizDeclinedOrFinished = false;
 
@@ -1986,9 +1911,6 @@
       startAeroNeonGame();
     });
 
-    /* =========================================================
-        4. JUEGO TRIVIA: AERO NEON
-    ========================================================= */
     const TRIVIA_QUESTIONS = [
       {
         category: "Fotografía Spotter",
@@ -2079,7 +2001,6 @@
       if (selected === correct) {
         btn.classList.add('correct');
         btn.querySelector('i').className = 'fa-solid fa-circle-check text-emerald-400';
-
         gameScore += 100;
         document.getElementById('game-score').textContent = gameScore;
         feedback.className = 'text-xs font-bold mb-3 text-emerald-400';
@@ -2103,9 +2024,6 @@
       quizDeclinedOrFinished = true;
     });
 
-    /* =========================================================
-        5. MENSAJE TIPO WHATSAPP AUTOMÁTICO (UNA VEZ AL DÍA)
-    ========================================================= */
     function playFuturisticNotificationSound() {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
