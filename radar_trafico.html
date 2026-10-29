@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Spotters Spain · Radar BCN & Escáner Heavies</title>
 
-  <!-- Iconos FontAwesome -->
+  <!-- Iconos y Leaflet para el mapa de vuelos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root {
@@ -47,7 +49,6 @@
       flex-wrap: nowrap;
       gap: 6px;
       z-index: 10;
-      transition: border-color 0.5s ease, box-shadow 0.5s ease;
     }
 
     header h1 {
@@ -58,7 +59,6 @@
       gap: 6px;
       color: var(--neon-cyan);
       text-shadow: 0 0 6px rgba(0, 210, 255, 0.6);
-      transition: all 0.5s ease;
       letter-spacing: 0.3px;
       white-space: nowrap;
     }
@@ -121,7 +121,7 @@
       box-shadow: 0 0 10px var(--neon-cyan);
     }
 
-    /* BARRA DE SELECCIÓN CON ANIMACIÓN HINT */
+    /* BARRA DE SELECCIÓN */
     .heavy-selector-bar {
       background: #03050d;
       padding: 5px 8px;
@@ -137,18 +137,6 @@
 
     .heavy-selector-bar::-webkit-scrollbar {
       display: none;
-    }
-
-    .heavy-selector-bar.animate-scroll {
-      animation: swipeHint 1.8s ease-in-out 0.5s;
-    }
-
-    @keyframes swipeHint {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-45px); }
-      50% { transform: translateX(20px); }
-      75% { transform: translateX(-15px); }
-      100% { transform: translateX(0); }
     }
 
     .heavy-selector-group {
@@ -228,16 +216,6 @@
       box-shadow: 0 0 4px rgba(0, 255, 204, 0.2);
     }
 
-    .select-heavy-model:hover, .select-heavy-model:focus, .select-heavy-model.active {
-      background: rgba(0, 210, 255, 0.15);
-      box-shadow: 0 0 10px var(--neon-cyan);
-    }
-
-    .select-heavy-model.select-airport:hover, .select-heavy-model.select-airport:focus {
-      background: rgba(0, 255, 204, 0.15);
-      box-shadow: 0 0 10px var(--neon-green);
-    }
-
     .select-heavy-model option {
       background-color: #070a1a;
       color: #ffffff;
@@ -315,20 +293,38 @@
       white-space: nowrap;
     }
 
-    .btn-fullscreen:hover {
-      background: #ffffff;
-      box-shadow: 0 0 14px #ffffff;
-    }
-
-    .panel iframe {
+    #traffic-map {
       flex: 1;
       width: 100%;
       height: 100%;
-      border: none;
-      background: #000000;
-      transform: translateZ(0);
-      will-change: transform;
+      min-height: 0;
+      background: #07111a;
+      z-index: 1;
     }
+
+    .traffic-status {
+      margin-left: auto;
+      color: var(--neon-cyan);
+      font-size: 0.65rem;
+      white-space: nowrap;
+    }
+
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+      background: #07111a;
+      color: #fff;
+      border: 1px solid var(--neon-gold);
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+      border-radius: 8px;
+    }
+
+    .leaflet-popup-content {
+      margin: 10px 14px;
+      line-height: 1.5;
+      min-width: 180px;
+      font-size: 0.75rem;
+    }
+
+    .leaflet-container a { color: var(--neon-gold); }
 
     .panel.fullscreen {
       position: fixed;
@@ -357,7 +353,12 @@
       text-overflow: ellipsis;
     }
 
-    /* MODAL MÁS COMPACTO Y CON DESPLEGABLES */
+    .fr24-plane-container {
+      will-change: transform;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.85));
+    }
+
+    /* MODAL */
     .neon-modal-overlay {
       position: fixed;
       inset: 0;
@@ -380,8 +381,8 @@
 
     .neon-modal-card {
       background: linear-gradient(160deg, #0a0e28 0%, #050716 100%);
-      border: 1.5px solid var(--neon-cyan);
-      box-shadow: 0 0 20px rgba(0, 210, 255, 0.35), inset 0 0 10px rgba(0, 210, 255, 0.1);
+      border: 1.5px solid var(--neon-gold);
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.35);
       border-radius: 10px;
       max-width: 360px;
       width: 100%;
@@ -389,18 +390,12 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transform: scale(0.9) translateY(10px);
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .neon-modal-overlay.active .neon-modal-card {
-      transform: scale(1) translateY(0);
     }
 
     .neon-modal-header {
       padding: 8px 12px;
-      background: rgba(0, 210, 255, 0.05);
-      border-bottom: 1px solid rgba(0, 210, 255, 0.25);
+      background: rgba(255, 204, 0, 0.05);
+      border-bottom: 1px solid rgba(255, 204, 0, 0.25);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -409,8 +404,7 @@
     .neon-modal-title {
       font-size: 0.85rem;
       font-weight: 800;
-      color: var(--neon-cyan);
-      text-shadow: 0 0 6px rgba(0, 210, 255, 0.6);
+      color: var(--neon-gold);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -427,13 +421,6 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.2s ease;
-    }
-
-    .neon-modal-close:hover {
-      background: var(--neon-red);
-      color: #fff;
     }
 
     .neon-modal-body {
@@ -445,19 +432,12 @@
       font-size: 0.72rem;
     }
 
-    /* ESTILOS DE ACORDEÓN / DESPLEGABLE */
     .feature-item {
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(0, 210, 255, 0.12);
+      border: 1px solid rgba(255, 204, 0, 0.15);
       border-radius: 6px;
       padding: 6px 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .feature-item:hover, .feature-item.active {
-      border-color: var(--neon-green);
-      background: rgba(0, 255, 204, 0.04);
     }
 
     .feature-header {
@@ -467,96 +447,44 @@
       gap: 6px;
     }
 
-    .feature-header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .feature-icon {
-      font-size: 0.8rem;
-      min-width: 22px;
-      height: 22px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 210, 255, 0.1);
-    }
-
-    .feature-icon.apt { color: var(--neon-green); border: 1px solid var(--neon-green); }
-    .feature-icon.heavy { color: var(--neon-gold); border: 1px solid var(--neon-gold); }
-    .feature-icon.mil { color: var(--neon-purple); border: 1px solid var(--neon-purple); }
-    .feature-icon.airline { color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
-    .feature-icon.details { color: #00ffcc; border: 1px solid #00ffcc; }
-
     .feature-title {
       font-weight: 700;
       color: #ffffff;
       font-size: 0.75rem;
     }
 
-    .feature-chevron {
-      font-size: 0.65rem;
-      color: var(--neon-cyan);
-      transition: transform 0.3s ease;
-    }
-
-    .feature-item.active .feature-chevron {
-      transform: rotate(180deg);
-    }
-
     .feature-details {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
+      transition: max-height 0.3s ease;
       color: #b0c4de;
       font-size: 0.68rem;
-      line-height: 1.3;
-      padding-top: 0;
     }
 
     .feature-item.active .feature-details {
       max-height: 200px;
       padding-top: 6px;
-      border-top: 1px dashed rgba(0, 210, 255, 0.2);
+      border-top: 1px dashed rgba(255, 204, 0, 0.2);
       margin-top: 4px;
     }
 
     .neon-modal-footer {
       padding: 6px 10px;
       background: rgba(3, 5, 13, 0.6);
-      border-top: 1px solid rgba(0, 210, 255, 0.18);
+      border-top: 1px solid rgba(255, 204, 0, 0.2);
       display: flex;
       justify-content: flex-end;
     }
 
     .btn-neon-action {
-      background: linear-gradient(90deg, #00d2ff, #00ffcc);
+      background: linear-gradient(90deg, #ffcc00, #ff9900);
       color: #03050d;
       border: none;
       padding: 4px 12px;
       border-radius: 14px;
       font-size: 0.7rem;
       font-weight: 800;
-      text-transform: uppercase;
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
-    }
-
-    @keyframes spin-radar {
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes pulse-live {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 0.85rem; }
-      .heavy-selector-bar { padding: 4px 6px; }
-      .btn-fullscreen { font-size: 0.65rem; padding: 2px 6px; }
     }
   </style>
 </head>
@@ -569,7 +497,7 @@
     </h1>
 
     <div class="links">
-      <button class="btn-help-trigger" onClick="openModal()" title="Guía de Filtros">
+      <button class="btn-help-trigger" onClick="openModal()">
         <i class="fa-solid fa-circle-info"></i> Guía
       </button>
       <a href="https://www.flightradar24.com/41.30,2.08/11" target="_blank" rel="noopener" id="fr24-link">
@@ -578,7 +506,6 @@
     </div>
   </header>
 
-  <!-- BARRA DE SELECCIÓN DE TRÁFICO -->
   <div class="heavy-selector-bar" id="filterBar">
     <div class="heavy-selector-group">
       <div class="heavy-tag-title">
@@ -590,29 +517,7 @@
         <option value="MAD">📍 Madrid-Barajas (MAD)</option>
         <option value="PMI">📍 Palma de Mallorca (PMI)</option>
         <option value="AGP">📍 Málaga-Costa del Sol (AGP)</option>
-        <option value="ALC">📍 Alicante-Elche (ALC)</option>
         <option value="VLC">📍 Valencia (VLC)</option>
-        <option value="SVQ">📍 Sevilla (SVQ)</option>
-        <option value="BIO">📍 Bilbao (BIO)</option>
-        <option value="TFS">📍 Tenerife Sur (TFS)</option>
-        <option value="TFN">📍 Tenerife Norte (TFN)</option>
-        <option value="LPA">📍 Gran Canaria (LPA)</option>
-        <option value="ACE">📍 Lanzarote (ACE)</option>
-        <option value="FUE">📍 Fuerteventura (FUE)</option>
-        <option value="IBZ">📍 Ibiza (IBZ)</option>
-        <option value="MAH">📍 Menorca (MAH)</option>
-        <option value="SCQ">📍 Santiago de Compostela (SCQ)</option>
-        <option value="LCG">📍 A Coruña (LCG)</option>
-        <option value="VGO">📍 Vigo (VGO)</option>
-        <option value="OVD">📍 Asturias (OVD)</option>
-        <option value="SDR">📍 Santander (SDR)</option>
-        <option value="ZAZ">📍 Zaragoza (ZAZ)</option>
-        <option value="GRX">📍 Granada-Jaén (GRX)</option>
-        <option value="LEI">📍 Almería (LEI)</option>
-        <option value="XRY">📍 Jerez (XRY)</option>
-        <option value="RMU">📍 Región de Murcia (RMU)</option>
-        <option value="REU">📍 Reus (REU)</option>
-        <option value="GRO">📍 Girona-Costa Brava (GRO)</option>
       </select>
 
       <button class="btn-heavy-model active" id="btn-all" onClick="filterHeavyModel('ALL')">
@@ -621,7 +526,6 @@
       <button class="btn-heavy-model" id="btn-heavy" onClick="filterHeavyModel('HEAVY_ALL')">
         <i class="fa-solid fa-layer-group"></i> Heavies
       </button>
-
       <button class="btn-heavy-model btn-mil" id="btn-mil" onClick="filterHeavyModel('MILITARY')">
         <i class="fa-solid fa-shield-halved"></i> Militar
       </button>
@@ -631,30 +535,12 @@
         <option value="VLG">💛 Vueling (VLG)</option>
         <option value="IBE">🔴 Iberia (IBE)</option>
         <option value="RYR">💙 Ryanair (RYR)</option>
-        <option value="AEA">🌐 Air Europa (AEA)</option>
-        <option value="LVL">🟦 Level (LVL)</option>
-        <option value="UAE">🇦🇪 Emirates (UAE)</option>
-        <option value="QTR">🇶🇦 Qatar Airways (QTR)</option>
-        <option value="AAL">🇺🇸 American Airlines (AAL)</option>
-        <option value="DAL">🇺🇸 Delta Air Lines (DAL)</option>
-        <option value="UAL">🇺🇸 United Airlines (UAL)</option>
-        <option value="EJU">🟧 EasyJet (EJU)</option>
-        <option value="AFR">🇫🇷 Air France (AFR)</option>
-        <option value="DLH">🇩🇪 Lufthansa (DLH)</option>
-        <option value="SWR">🇨🇭 Swiss (SWR)</option>
-        <option value="BAW">🇬🇧 British Airways (BAW)</option>
-        <option value="THY">🇹🇷 Turkish Airlines (THY)</option>
-        <option value="WZZ">🟣 Wizz Air (WZZ)</option>
-        <option value="IBB">🇮🇨 Binter Canarias (IBB)</option>
       </select>
 
       <select class="select-heavy-model" id="select-alt-filter" onChange="filterHeavyModel('ALT_FILTER')">
         <option value="ALL_ALT" selected>✈️ Altura: Todas</option>
         <option value="3000">🛬 ≤ 3.000 ft</option>
         <option value="6000">🛬 ≤ 6.000 ft</option>
-        <option value="9000">🛫 ≤ 9.000 ft</option>
-        <option value="15000">✈️ ≤ 15.000 ft</option>
-        <option value="HIGH_ALT">☁️ ≥ 20.000 ft</option>
       </select>
     </div>
   </div>
@@ -665,8 +551,9 @@
         <div class="left">
           <i class="fa-solid fa-location-dot"></i>
           <span id="tma-location-text">TMA BCN/ESP</span>
-          <span class="badge" id="filter-badge">SATÉLITE (BCN)</span>
+          <span class="badge" id="filter-badge">TRÁFICO ADS-B (BCN)</span>
         </div>
+        <span class="traffic-status" id="traffic-status">Conectando…</span>
 
         <button class="btn-fullscreen" id="btn-fs" onClick="toggleFullscreen()">
           <i class="fa-solid fa-expand" id="fs-icon"></i>
@@ -674,113 +561,34 @@
         </button>
       </div>
 
-      <iframe
-        id="traffic-iframe"
-        src="https://globe.adsbexchange.com/?lat=41.30&lon=2.08&zoom=11&lang=es&miniEnable=1&largeMode=0&hideButtons&hideHeader&mapType=hybrid&hideAds=1"
-        title="Tráfico aéreo Satélite Spotters"
-        allowfullscreen
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-        loading="eager">
-      </iframe>
+      <div id="traffic-map" role="application"></div>
     </div>
   </div>
 
-  <footer id="footer-text">
+  <footer>
     BCN · Satélite Spotters Spain
   </footer>
 
-  <!-- MODAL INFORMATIVO MÁS PEQUEÑO CON DESPLEGABLES -->
   <div class="neon-modal-overlay" id="helpModal">
     <div class="neon-modal-card">
       <div class="neon-modal-header">
         <div class="neon-modal-title">
           <i class="fa-solid fa-sliders"></i> Guía del Radar
         </div>
-        <button class="neon-modal-close" onClick="closeModal()" title="Cerrar">
+        <button class="neon-modal-close" onClick="closeModal()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-
       <div class="neon-modal-body">
-        <p style="color: var(--neon-cyan); font-weight: 600; text-align: center; margin-bottom: 2px;">
-          Toca cada título para ver detalles:
-        </p>
-
-        <!-- OPCIÓN 1 -->
         <div class="feature-item" onClick="toggleFeature(this)">
           <div class="feature-header">
-            <div class="feature-header-left">
-              <div class="feature-icon details"><i class="fa-solid fa-plane-dot"></i></div>
-              <div class="feature-title">Ficha al Tocar Avión</div>
-            </div>
-            <i class="fa-solid fa-chevron-down feature-chevron"></i>
+            <div class="feature-title">Ficha al Tocar Avión</div>
           </div>
-          <div class="feature-details">
-            Al tocar cualquier avión sobre el mapa satélite, se abre la ventana simplificada sin distracciones. Muestra foto real de la aeronave, velocidad nodal, altitud de vuelo, rumbo magnético, compañía aérea, matrícula registrada y código Squawk en tiempo real.
-          </div>
-        </div>
-
-        <!-- OPCIÓN 2 -->
-        <div class="feature-item" onClick="toggleFeature(this)">
-          <div class="feature-header">
-            <div class="feature-header-left">
-              <div class="feature-icon apt"><i class="fa-solid fa-plane-arrival"></i></div>
-              <div class="feature-title">Filtro por Aeropuerto</div>
-            </div>
-            <i class="fa-solid fa-chevron-down feature-chevron"></i>
-          </div>
-          <div class="feature-details">
-            Despliega la lista de aeropuertos para centrar de inmediato el mapa sobre la zona terminal (TMA) de 27 aeropuertos españoles. Cambia automáticamente las coordenadas, el nivel de zoom óptimo y los enlaces directos a Flightradar24.
-          </div>
-        </div>
-
-        <!-- OPCIÓN 3 -->
-        <div class="feature-item" onClick="toggleFeature(this)">
-          <div class="feature-header">
-            <div class="feature-header-left">
-              <div class="feature-icon heavy"><i class="fa-solid fa-layer-group"></i></div>
-              <div class="feature-title">Tráfico Heavy (A5)</div>
-            </div>
-            <i class="fa-solid fa-chevron-down feature-chevron"></i>
-          </div>
-          <div class="feature-details">
-            Activa el filtro de categoría A5 para aislar únicamente aviones de fuselaje ancho (Widebody). Ideal para cazar vuelos intercontinentales y grandes cargueros como los Airbus A350, A380, A330 o Boeing 777, 787 y 747.
-          </div>
-        </div>
-
-        <!-- OPCIÓN 4 -->
-        <div class="feature-item" onClick="toggleFeature(this)">
-          <div class="feature-header">
-            <div class="feature-header-left">
-              <div class="feature-icon mil"><i class="fa-solid fa-shield-halved"></i></div>
-              <div class="feature-title">Tráfico Militar</div>
-            </div>
-            <i class="fa-solid fa-chevron-down feature-chevron"></i>
-          </div>
-          <div class="feature-details">
-            Muestra vuelos de la fuerza aérea, cazas de combate, aviones de transporte militar (Eurofighter, C130 Hercules, A400M) y jets VIP gubernamentales en tiempo real a través de transpondedores militares activos.
-          </div>
-        </div>
-
-        <!-- OPCIÓN 5 -->
-        <div class="feature-item" onClick="toggleFeature(this)">
-          <div class="feature-header">
-            <div class="feature-header-left">
-              <div class="feature-icon airline"><i class="fa-solid fa-building"></i></div>
-              <div class="feature-title">Aerolíneas y Altitud</div>
-            </div>
-            <i class="fa-solid fa-chevron-down feature-chevron"></i>
-          </div>
-          <div class="feature-details">
-            Filtra tráficos por el indicativo (Callsign) de compañías específicas (Iberia, Vueling, Emirates...) o selecciona rangos de altitud (≤ 3.000 ft, ≤ 6.000 ft) para rastrear de forma exacta las aproximaciones y despegues en cabecera de pista.
-          </div>
+          <div class="feature-details">Al tocar un avión, verás su información en tiempo real.</div>
         </div>
       </div>
-
       <div class="neon-modal-footer">
-        <button class="btn-neon-action" onClick="closeModal()">
-          Entendido <i class="fa-solid fa-check"></i>
-        </button>
+        <button class="btn-neon-action" onClick="closeModal()">Entendido</button>
       </div>
     </div>
   </div>
@@ -791,77 +599,134 @@
       MAD: { name: 'Madrid-Barajas', lat: 40.48, lon: -3.56, zoom: 11, code: 'MAD' },
       PMI: { name: 'Palma de Mallorca', lat: 39.55, lon: 2.73, zoom: 11, code: 'PMI' },
       AGP: { name: 'Málaga-Costa del Sol', lat: 36.67, lon: -4.49, zoom: 11, code: 'AGP' },
-      ALC: { name: 'Alicante-Elche', lat: 38.28, lon: -0.56, zoom: 11, code: 'ALC' },
-      VLC: { name: 'Valencia', lat: 39.49, lon: -0.48, zoom: 11, code: 'VLC' },
-      SVQ: { name: 'Sevilla', lat: 37.42, lon: -5.89, zoom: 11, code: 'SVQ' },
-      BIO: { name: 'Bilbao', lat: 43.30, lon: -2.91, zoom: 11, code: 'BIO' },
-      TFS: { name: 'Tenerife Sur', lat: 28.04, lon: -16.57, zoom: 11, code: 'TFS' },
-      TFN: { name: 'Tenerife Norte', lat: 28.48, lon: -16.34, zoom: 11, code: 'TFN' },
-      LPA: { name: 'Gran Canaria', lat: 27.93, lon: -15.38, zoom: 11, code: 'LPA' },
-      ACE: { name: 'Lanzarote', lat: 28.95, lon: -13.60, zoom: 11, code: 'ACE' },
-      FUE: { name: 'Fuerteventura', lat: 28.45, lon: -13.86, zoom: 11, code: 'FUE' },
-      IBZ: { name: 'Ibiza', lat: 38.87, lon: 1.37, zoom: 11, code: 'IBZ' },
-      MAH: { name: 'Menorca', lat: 39.86, lon: 4.22, zoom: 11, code: 'MAH' },
-      SCQ: { name: 'Santiago de Compostela', lat: 42.89, lon: -8.41, zoom: 11, code: 'SCQ' },
-      LCG: { name: 'A Coruña', lat: 43.30, lon: -8.37, zoom: 11, code: 'LCG' },
-      VGO: { name: 'Vigo', lat: 42.23, lon: -8.62, zoom: 11, code: 'VGO' },
-      OVD: { name: 'Asturias', lat: 43.56, lon: -6.03, zoom: 11, code: 'OVD' },
-      SDR: { name: 'Santander', lat: 43.42, lon: -3.82, zoom: 11, code: 'SDR' },
-      ZAZ: { name: 'Zaragoza', lat: 41.66, lon: -1.04, zoom: 11, code: 'ZAZ' },
-      GRX: { name: 'Granada-Jaén', lat: 37.18, lon: -3.77, zoom: 11, code: 'GRX' },
-      LEI: { name: 'Almería', lat: 36.84, lon: -2.37, zoom: 11, code: 'LEI' },
-      XRY: { name: 'Jerez', lat: 36.74, lon: -6.06, zoom: 11, code: 'XRY' },
-      RMU: { name: 'Región de Murcia', lat: 37.80, lon: -1.12, zoom: 11, code: 'RMU' },
-      REU: { name: 'Reus', lat: 41.14, lon: 1.16, zoom: 11, code: 'REU' },
-      GRO: { name: 'Girona-Costa Brava', lat: 41.90, lon: 2.76, zoom: 11, code: 'GRO' }
+      VLC: { name: 'Valencia', lat: 39.49, lon: -0.48, zoom: 11, code: 'VLC' }
+    };
+
+    const aircraftModelNames = {
+      'A20N': 'Airbus A320neo', 'A21N': 'Airbus A321neo', 'A320': 'Airbus A320', 'A321': 'Airbus A321',
+      'A332': 'Airbus A330-200', 'A333': 'Airbus A330-300', 'A359': 'Airbus A350-900', 'A388': 'Airbus A380-800',
+      'B738': 'Boeing 737-800', 'B77W': 'Boeing 777-300ER', 'B788': 'Boeing 787-8', 'B789': 'Boeing 787-9'
     };
 
     let currentAirportKey = 'BCN';
     let activeFilterMode = 'ALL';
+    let trafficMap, aircraftLayer, airportRange;
+    let aircraftSnapshot = [];
+    let activeMarkers = new Map();
+    let requestInProgress = false;
+    const SEARCH_RADIUS_NM = 100;
+    const HEAVY_TYPES = new Set(['A332','A333','A338','A339','A342','A343','A345','A346','A359','A35K','A388','B744','B748','B772','B77L','B77W','B788','B789','B78X']);
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Animación de deslizamiento lateral en filtros
-      const filterBar = document.getElementById('filterBar');
-      setTimeout(() => {
-        filterBar.classList.add('animate-scroll');
-        filterBar.scrollTo({ left: 120, behavior: 'smooth' });
-        setTimeout(() => {
-          filterBar.scrollTo({ left: 0, behavior: 'smooth' });
-        }, 700);
-      }, 500);
+      initTrafficMap();
     });
 
-    function openModal() {
-      document.getElementById('helpModal').classList.add('active');
+    function initTrafficMap() {
+      const apt = spanishAirports[currentAirportKey];
+      trafficMap = L.map('traffic-map', { zoomControl: true, preferCanvas: true }).setView([apt.lat, apt.lon], apt.zoom);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(trafficMap);
+      aircraftLayer = L.layerGroup().addTo(trafficMap);
+      airportRange = L.circle([apt.lat, apt.lon], { radius: SEARCH_RADIUS_NM * 1852, color: '#ffcc00', weight: 1, opacity: 0.65, fillColor: '#ffcc00', fillOpacity: 0.035 }).addTo(trafficMap);
+      loadAircraft();
+      window.setInterval(loadAircraft, 15000);
     }
 
-    function closeModal() {
-      document.getElementById('helpModal').classList.remove('active');
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
     }
 
-    // DESPLEGABLE INTERACTIVO DE DETALLES
-    function toggleFeature(element) {
-      const isActive = element.classList.contains('active');
-      
-      // Cerrar otros desplegables para mantener el modal compacto
-      document.querySelectorAll('.feature-item').forEach(item => {
-        item.classList.remove('active');
+    function getAircraftAltitude(aircraft) {
+      const raw = aircraft.alt_baro ?? aircraft.alt_geom;
+      if (raw === 'ground') return 0;
+      const altitude = Number(raw);
+      return Number.isFinite(altitude) ? altitude : null;
+    }
+
+    async function loadAircraft() {
+      if (requestInProgress) return;
+      requestInProgress = true;
+      const apt = spanishAirports[currentAirportKey];
+      const status = document.getElementById('traffic-status');
+      status.textContent = 'Actualizando vuelos…';
+      try {
+        const url = `https://api.adsb.lol/v2/lat/${apt.lat}/lon/${apt.lon}/dist/${SEARCH_RADIUS_NM}`;
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`API HTTP ${response.status}`);
+        const data = await response.json();
+        aircraftSnapshot = Array.isArray(data.ac) ? data.ac : (Array.isArray(data.aircraft) ? data.aircraft : []);
+        renderAircraft();
+        const stamp = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        status.textContent = `${aircraftSnapshot.length} aeronaves · ${stamp}`;
+      } catch (error) {
+        status.textContent = 'No se pudieron cargar vuelos';
+        console.error('Error al consultar adsb.lol:', error);
+      } finally {
+        requestInProgress = false;
+      }
+    }
+
+    function renderAircraft() {
+      if (!aircraftLayer) return;
+      const airlineSelect = document.getElementById('select-airline-filter');
+      const altSelect = document.getElementById('select-alt-filter');
+      const airlineCode = airlineSelect.value;
+      const altitudeFilter = altSelect.value;
+
+      const visibleAircraft = aircraftSnapshot.filter(aircraft => {
+        const flight = String(aircraft.flight || '').trim().toUpperCase();
+        const type = String(aircraft.t || '').trim().toUpperCase();
+        const altitude = getAircraftAltitude(aircraft);
+        if (activeFilterMode === 'HEAVY_ALL' && !HEAVY_TYPES.has(type) && aircraft.category !== 'A5') return false;
+        if (activeFilterMode === 'MILITARY' && !aircraft.mil) return false;
+        if (activeFilterMode === 'AIRLINE_FILTER' && airlineCode !== 'ALL_AIRLINES' && !flight.startsWith(airlineCode)) return false;
+        if (activeFilterMode === 'ALT_FILTER' && altitudeFilter === 'HIGH_ALT' && (altitude === null || altitude < 20000)) return false;
+        if (activeFilterMode === 'ALT_FILTER' && altitudeFilter !== 'ALL_ALT' && altitudeFilter !== 'HIGH_ALT' && (altitude === null || altitude > Number(altitudeFilter))) return false;
+        return aircraft.lat != null && aircraft.lon != null;
       });
 
-      if (!isActive) {
-        element.classList.add('active');
-      }
-    }
+      const currentIds = new Set();
 
-    document.getElementById('helpModal').addEventListener('click', (e) => {
-      if (e.target.id === 'helpModal') {
-        closeModal();
-      }
-    });
+      for (const aircraft of visibleAircraft) {
+        const id = aircraft.hex || aircraft.flight || `${aircraft.lat},${aircraft.lon}`;
+        currentIds.add(id);
 
-    function getBaseUrlForAirport(aptKey) {
-      const apt = spanishAirports[aptKey] || spanishAirports['BCN'];
-      return `https://globe.adsbexchange.com/?lat=${apt.lat}&lon=${apt.lon}&zoom=${apt.zoom}&lang=es&miniEnable=1&largeMode=0&hideButtons&hideHeader&mapType=hybrid&hideAds=1`;
+        const targetLat = Number(aircraft.lat);
+        const targetLon = Number(aircraft.lon);
+        const targetHeading = Number(aircraft.track) || 0;
+        const flight = String(aircraft.flight || '').trim() || aircraft.hex || 'Aeronave';
+        const rawType = String(aircraft.t || '').trim().toUpperCase();
+        const modelName = aircraftModelNames[rawType] || (rawType ? `Tipo: ${rawType}` : 'Modelo no especificado');
+        const altitudeValue = getAircraftAltitude(aircraft);
+        const altitude = aircraft.alt_baro === 'ground' ? 'En tierra' : (altitudeValue === null ? '—' : `${Math.round(altitudeValue).toLocaleString('es-ES')} ft`);
+        const speed = aircraft.gs == null ? '—' : `${Math.round(Number(aircraft.gs))} kt`;
+        const routeInfo = aircraft.route ? escapeHtml(aircraft.route) : '—';
+
+        const iconHtml = `<div class="fr24-plane-container" style="transform: rotate(${targetHeading}deg);"><svg width="26" height="26" viewBox="0 0 24 24" fill="#ffcc00" stroke="#000000" stroke-width="1.2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div>`;
+        const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [26, 26], iconAnchor: [13, 13] });
+
+        const popupContent = `<strong>Vuelo:</strong> ${escapeHtml(flight)}<br><strong>Modelo:</strong> ${escapeHtml(modelName)}<br><strong>Matrícula:</strong> ${escapeHtml(aircraft.r || '—')}<br><strong>Altitud:</strong> ${altitude}<br><strong>Velocidad:</strong> ${speed}<br><strong>Ruta:</strong> ${routeInfo}`;
+
+        if (activeMarkers.has(id)) {
+          const marker = activeMarkers.get(id);
+          marker.setLatLng([targetLat, targetLon]);
+          marker.setIcon(customIcon);
+          marker.getPopup().setContent(popupContent);
+        } else {
+          const marker = L.marker([targetLat, targetLon], { icon: customIcon }).bindPopup(popupContent);
+          aircraftLayer.addLayer(marker);
+          activeMarkers.set(id, marker);
+        }
+      }
+
+      for (const [id, marker] of activeMarkers.entries()) {
+        if (!currentIds.has(id)) {
+          aircraftLayer.removeLayer(marker);
+          activeMarkers.delete(id);
+        }
+      }
     }
 
     function changeAirport() {
@@ -871,121 +736,41 @@
 
       document.getElementById('fr24-link').href = `https://www.flightradar24.com/${apt.lat},${apt.lon}/${apt.zoom}`;
       document.getElementById('tma-location-text').textContent = `TMA ${apt.code}/ESP`;
-      document.getElementById('footer-text').textContent = `${apt.code} · ${apt.name} · Spotters Spain`;
+      document.getElementById('filter-badge').textContent = `TRÁFICO ADS-B (${apt.code})`;
 
-      filterHeavyModel(activeFilterMode);
+      trafficMap.setView([apt.lat, apt.lon], apt.zoom);
+      airportRange.setLatLng([apt.lat, apt.lon]);
+      loadAircraft();
     }
 
-    function filterHeavyModel(modelKey) {
-      activeFilterMode = modelKey;
-      const iframe = document.getElementById('traffic-iframe');
-      const badge = document.getElementById('filter-badge');
-      const altSelect = document.getElementById('select-alt-filter');
-      const airlineSelect = document.getElementById('select-airline-filter');
-      const currentApt = spanishAirports[currentAirportKey];
-      const baseUrl = getBaseUrlForAirport(currentAirportKey);
-
-      document.querySelectorAll('.btn-heavy-model').forEach(btn => btn.classList.remove('active'));
-      altSelect.classList.remove('active');
-      airlineSelect.classList.remove('active');
-
-      let targetUrl = baseUrl;
-
-      if (modelKey === 'HEAVY_ALL') {
-        document.getElementById('btn-heavy').classList.add('active');
-        airlineSelect.value = 'ALL_AIRLINES';
-        altSelect.value = 'ALL_ALT';
-        badge.textContent = `HEAVIES (${currentApt.code})`;
-        targetUrl = `${baseUrl}&filterCategory=A5`;
-      } else if (modelKey === 'MILITARY') {
-        document.getElementById('btn-mil').classList.add('active');
-        airlineSelect.value = 'ALL_AIRLINES';
-        altSelect.value = 'ALL_ALT';
-        badge.textContent = `MILITAR (${currentApt.code})`;
-        targetUrl = `${baseUrl}&mil`;
-      } else if (modelKey === 'AIRLINE_FILTER') {
-        const airlineVal = airlineSelect.value;
-        altSelect.value = 'ALL_ALT';
-
-        if (airlineVal === 'ALL_AIRLINES') {
-          document.getElementById('btn-all').classList.add('active');
-          badge.textContent = `SATÉLITE (${currentApt.code})`;
-          targetUrl = baseUrl;
-        } else {
-          airlineSelect.classList.add('active');
-          const airlineText = airlineSelect.options[airlineSelect.selectedIndex].text.split('(')[0].trim();
-          badge.textContent = `${airlineText.toUpperCase()} (${currentApt.code})`;
-          targetUrl = `${baseUrl}&filterCallsign=${airlineVal}`;
-        }
-      } else if (modelKey === 'ALT_FILTER') {
-        const altVal = altSelect.value;
-        airlineSelect.value = 'ALL_AIRLINES';
-
-        if (altVal === 'ALL_ALT') {
-          document.getElementById('btn-all').classList.add('active');
-          badge.textContent = `SATÉLITE (${currentApt.code})`;
-          targetUrl = baseUrl;
-        } else if (altVal === 'HIGH_ALT') {
-          altSelect.classList.add('active');
-          badge.textContent = `ALT ≥ 20.000 FT (${currentApt.code})`;
-          targetUrl = `https://globe.adsbexchange.com/?lat=${currentApt.lat}&lon=${currentApt.lon}&zoom=10&lang=es&filterAltMin=20000&miniEnable=1&largeMode=0&hideButtons&hideHeader&mapType=hybrid&hideAds=1`;
-        } else {
-          altSelect.classList.add('active');
-          badge.textContent = `ALT ≤ ${altVal} FT (${currentApt.code})`;
-          targetUrl = `https://globe.adsbexchange.com/?lat=${currentApt.lat}&lon=${currentApt.lon}&zoom=10&lang=es&filterAltMax=${altVal}&miniEnable=1&largeMode=0&hideButtons&hideHeader&mapType=hybrid&hideAds=1`;
-        }
-      } else {
-        document.getElementById('btn-all').classList.add('active');
-        airlineSelect.value = 'ALL_AIRLINES';
-        altSelect.value = 'ALL_ALT';
-        badge.textContent = `SATÉLITE (${currentApt.code})`;
-        targetUrl = baseUrl;
-      }
-
-      try {
-        iframe.contentWindow.location.replace(targetUrl);
-      } catch (e) {
-        iframe.src = targetUrl;
-      }
+    function filterHeavyModel(mode) {
+      activeFilterMode = mode;
+      document.querySelectorAll('.btn-heavy-model').forEach(b => b.classList.remove('active'));
+      if (mode === 'ALL') document.getElementById('btn-all').classList.add('active');
+      if (mode === 'HEAVY_ALL') document.getElementById('btn-heavy').classList.add('active');
+      if (mode === 'MILITARY') document.getElementById('btn-mil').classList.add('active');
+      renderAircraft();
     }
 
     function toggleFullscreen() {
       const panel = document.getElementById('traffic-panel');
-      const btnText = document.getElementById('fs-text');
-      const btnIcon = document.getElementById('fs-icon');
-      const isFullscreen = panel.classList.contains('fullscreen');
-
-      if (isFullscreen) {
-        panel.classList.remove('fullscreen');
-        document.body.classList.remove('fs-active');
-        btnText.textContent = 'Ampliar Mapa';
-        btnIcon.className = 'fa-solid fa-expand';
-
-        if (document.exitFullscreen && document.fullscreenElement) {
-          document.exitFullscreen().catch(err => console.log(err));
-        }
+      const icon = document.getElementById('fs-icon');
+      const text = document.getElementById('fs-text');
+      panel.classList.toggle('fullscreen');
+      document.body.classList.toggle('fs-active');
+      if (panel.classList.contains('fullscreen')) {
+        icon.className = 'fa-solid fa-compress';
+        text.textContent = 'Minimizar';
       } else {
-        panel.classList.add('fullscreen');
-        document.body.classList.add('fs-active');
-        btnText.textContent = 'Restaurar Mapa';
-        btnIcon.className = 'fa-solid fa-compress';
-
-        if (panel.requestFullscreen) {
-          panel.requestFullscreen().catch(err => console.log(err));
-        }
+        icon.className = 'fa-solid fa-expand';
+        text.textContent = 'Ampliar Mapa';
       }
+      setTimeout(() => trafficMap.invalidateSize(), 250);
     }
 
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const panel = document.getElementById('traffic-panel');
-        if (panel.classList.contains('fullscreen')) {
-          toggleFullscreen();
-        } else {
-          closeModal();
-        }
-      }
-    });
+    function openModal() { document.getElementById('helpModal').classList.add('active'); }
+    function closeModal() { document.getElementById('helpModal').classList.remove('active'); }
+    function toggleFeature(el) { el.classList.toggle('active'); }
   </script>
 </body>
 </html>
