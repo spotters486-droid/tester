@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Spotters Spain · Radar BCN & Escáner Heavies</title>
+  <title>Spotters Spain · Radar Local Leaflet</title>
 
-  <!-- Iconos y Leaflet para el mapa de vuelos -->
+  <!-- Iconos FontAwesome y Leaflet CSS/JS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -13,7 +13,6 @@
   <style>
     :root {
       --bg-color: #050814;
-      --panel-bg: linear-gradient(145deg, #0c102b, #070a1a);
       --neon-cyan: #00d2ff;
       --neon-green: #00ffcc;
       --neon-red: #ff0055;
@@ -21,11 +20,7 @@
       --neon-purple: #b026ff;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -35,132 +30,38 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      padding-bottom: env(safe-area-inset-bottom);
     }
 
     header {
       background: linear-gradient(180deg, #070a1a 0%, #0c102b 100%);
-      padding: 4px 10px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1.5px solid var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
-      flex-wrap: nowrap;
-      gap: 6px;
       z-index: 10;
     }
 
     header h1 {
       font-size: 0.95rem;
       font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
       color: var(--neon-cyan);
-      text-shadow: 0 0 6px rgba(0, 210, 255, 0.6);
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-    }
-
-    header h1 i.radar-icon {
-      animation: spin-radar 6s linear infinite;
-    }
-
-    header h1 span.live-badge {
-      background: var(--neon-red);
-      color: white;
-      font-size: 0.55rem;
-      padding: 1px 5px;
-      border-radius: 999px;
-      font-weight: bold;
-      box-shadow: 0 0 6px rgba(255, 0, 85, 0.8);
-      animation: pulse-live 1.8s infinite;
-    }
-
-    .links {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .links a, .links button {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: rgba(0, 210, 255, 0.1);
-      border: 1px solid var(--neon-cyan);
-      box-shadow: 0 0 4px rgba(0, 210, 255, 0.2);
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .links button.btn-help-trigger {
-      background: rgba(255, 204, 0, 0.12);
-      border-color: var(--neon-gold);
-      color: var(--neon-gold);
-      box-shadow: 0 0 6px rgba(255, 204, 0, 0.3);
-    }
-
-    .links button.btn-help-trigger:hover {
-      background: var(--neon-gold);
-      color: #000000;
-      box-shadow: 0 0 12px var(--neon-gold);
-    }
-
-    .links a:hover {
-      background: var(--neon-cyan);
-      color: #000000;
-      box-shadow: 0 0 10px var(--neon-cyan);
-    }
-
-    /* BARRA DE SELECCIÓN */
     .heavy-selector-bar {
       background: #03050d;
-      padding: 5px 8px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       gap: 6px;
       border-bottom: 1px solid rgba(0, 210, 255, 0.2);
       overflow-x: auto;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
     }
 
-    .heavy-selector-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .heavy-selector-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
-    }
-
-    .heavy-tag-title {
-      font-size: 0.65rem;
-      font-weight: 900;
-      color: var(--neon-gold);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding-right: 6px;
-      border-right: 1px solid rgba(255, 204, 0, 0.3);
-      white-space: nowrap;
-    }
-
-    .btn-heavy-model {
+    .btn-heavy-model, .select-heavy-model {
       background: rgba(255, 204, 0, 0.08);
       color: var(--neon-gold);
       border: 1px solid var(--neon-gold);
@@ -169,57 +70,11 @@
       font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.25s ease;
-      white-space: nowrap;
     }
 
-    .btn-heavy-model:hover, .btn-heavy-model.active {
+    .btn-heavy-model.active, .btn-heavy-model:hover {
       background: var(--neon-gold);
-      color: #000000;
-      box-shadow: 0 0 10px var(--neon-gold);
-    }
-
-    .btn-heavy-model.btn-mil {
-      color: var(--neon-purple);
-      border-color: var(--neon-purple);
-      background: rgba(176, 38, 255, 0.08);
-    }
-
-    .btn-heavy-model.btn-mil:hover, .btn-heavy-model.btn-mil.active {
-      background: var(--neon-purple);
-      color: #ffffff;
-      box-shadow: 0 0 10px var(--neon-purple);
-    }
-
-    .select-heavy-model {
-      background: #070a1a;
-      color: var(--neon-cyan);
-      border: 1px solid var(--neon-cyan);
-      padding: 3px 8px;
-      border-radius: 14px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      cursor: pointer;
-      outline: none;
-      box-shadow: 0 0 4px rgba(0, 210, 255, 0.2);
-      transition: all 0.25s ease;
-      font-family: inherit;
-      white-space: nowrap;
-    }
-
-    .select-heavy-model.select-airport {
-      color: var(--neon-green);
-      border-color: var(--neon-green);
-      box-shadow: 0 0 4px rgba(0, 255, 204, 0.2);
-    }
-
-    .select-heavy-model option {
-      background-color: #070a1a;
-      color: #ffffff;
-      font-weight: 600;
+      color: #000;
     }
 
     .container {
@@ -227,500 +82,195 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      height: 100%;
-      min-height: 0;
     }
 
     .panel {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      flex: 1;
-      height: 100%;
-      min-height: 0;
       position: relative;
-      background: var(--bg-color);
-      overflow: hidden;
     }
 
     .panel-header {
       background: #03050d;
-      padding: 3px 10px;
+      padding: 4px 10px;
       font-size: 0.75rem;
-      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid rgba(0, 210, 255, 0.3);
-      gap: 8px;
-    }
-
-    .panel-header .left {
-      display: flex;
-      align-items: center;
-      gap: 6px;
       color: var(--neon-green);
-      text-shadow: 0 0 4px rgba(0, 255, 204, 0.5);
-      white-space: nowrap;
-    }
-
-    .panel-header .badge {
-      font-size: 0.6rem;
-      background: rgba(0, 255, 204, 0.15);
-      color: var(--neon-green);
-      border: 1px solid var(--neon-green);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-weight: 700;
-      box-shadow: 0 0 4px rgba(0, 255, 204, 0.3);
-    }
-
-    .btn-fullscreen {
-      background: var(--neon-green);
-      color: #000000;
-      border: none;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 8px var(--neon-green);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
     }
 
     #traffic-map {
       flex: 1;
       width: 100%;
       height: 100%;
-      min-height: 0;
       background: #07111a;
-      z-index: 1;
     }
 
     .traffic-status {
-      margin-left: auto;
       color: var(--neon-cyan);
       font-size: 0.65rem;
-      white-space: nowrap;
     }
 
-    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-      background: #07111a;
-      color: #fff;
-      border: 1px solid var(--neon-gold);
-      box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
-      border-radius: 8px;
-    }
-
-    .leaflet-popup-content {
-      margin: 10px 14px;
-      line-height: 1.5;
-      min-width: 180px;
-      font-size: 0.75rem;
-    }
-
-    .leaflet-container a { color: var(--neon-gold); }
-
-    .panel.fullscreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 9999;
-    }
-
-    body.fs-active header,
-    body.fs-active .heavy-selector-bar,
-    body.fs-active footer {
-      display: none;
+    /* Estilo del icono del avión rotado con SVG */
+    .fr24-plane-container {
+      will-change: transform;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
     }
 
     footer {
       background: #03050d;
-      padding: 2px 8px;
+      padding: 4px 8px;
       font-size: 0.65rem;
       color: #7a8b9e;
       text-align: center;
       border-top: 1px solid rgba(0, 210, 255, 0.2);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .fr24-plane-container {
-      will-change: transform;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.85));
-    }
-
-    /* MODAL */
-    .neon-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 5, 13, 0.85);
-      backdrop-filter: blur(6px);
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.35s ease, visibility 0.35s ease;
-    }
-
-    .neon-modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .neon-modal-card {
-      background: linear-gradient(160deg, #0a0e28 0%, #050716 100%);
-      border: 1.5px solid var(--neon-gold);
-      box-shadow: 0 0 20px rgba(255, 204, 0, 0.35);
-      border-radius: 10px;
-      max-width: 360px;
-      width: 100%;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .neon-modal-header {
-      padding: 8px 12px;
-      background: rgba(255, 204, 0, 0.05);
-      border-bottom: 1px solid rgba(255, 204, 0, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .neon-modal-title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--neon-gold);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .neon-modal-close {
-      background: rgba(255, 0, 85, 0.15);
-      border: 1px solid var(--neon-red);
-      color: var(--neon-red);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .neon-modal-body {
-      padding: 8px 10px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.72rem;
-    }
-
-    .feature-item {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 204, 0, 0.15);
-      border-radius: 6px;
-      padding: 6px 8px;
-      cursor: pointer;
-    }
-
-    .feature-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .feature-title {
-      font-weight: 700;
-      color: #ffffff;
-      font-size: 0.75rem;
-    }
-
-    .feature-details {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      color: #b0c4de;
-      font-size: 0.68rem;
-    }
-
-    .feature-item.active .feature-details {
-      max-height: 200px;
-      padding-top: 6px;
-      border-top: 1px dashed rgba(255, 204, 0, 0.2);
-      margin-top: 4px;
-    }
-
-    .neon-modal-footer {
-      padding: 6px 10px;
-      background: rgba(3, 5, 13, 0.6);
-      border-top: 1px solid rgba(255, 204, 0, 0.2);
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .btn-neon-action {
-      background: linear-gradient(90deg, #ffcc00, #ff9900);
-      color: #03050d;
-      border: none;
-      padding: 4px 12px;
-      border-radius: 14px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <header id="main-header">
-    <h1 id="main-title">
-      <i class="fa-solid fa-crosshairs radar-icon"></i> Spotters Spain
-      <span class="live-badge" id="live-tag">EN VIVO</span>
-    </h1>
-
-    <div class="links">
-      <button class="btn-help-trigger" onClick="openModal()">
-        <i class="fa-solid fa-circle-info"></i> Guía
-      </button>
-      <a href="https://www.flightradar24.com/41.30,2.08/11" target="_blank" rel="noopener" id="fr24-link">
-        <i class="fa-solid fa-plane-departure"></i> FR24
-      </a>
-    </div>
+  <header>
+    <h1><i class="fa-solid fa-crosshairs"></i> Spotters Spain · Radar Local</h1>
   </header>
 
-  <div class="heavy-selector-bar" id="filterBar">
-    <div class="heavy-selector-group">
-      <div class="heavy-tag-title">
-        <i class="fa-solid fa-plane"></i> FILTRO:
-      </div>
-
-      <select class="select-heavy-model select-airport" id="select-airport-filter" onChange="changeAirport()">
-        <option value="BCN" selected>📍 Barcelona-El Prat (BCN)</option>
-        <option value="MAD">📍 Madrid-Barajas (MAD)</option>
-        <option value="PMI">📍 Palma de Mallorca (PMI)</option>
-        <option value="AGP">📍 Málaga-Costa del Sol (AGP)</option>
-        <option value="VLC">📍 Valencia (VLC)</option>
-      </select>
-
-      <button class="btn-heavy-model active" id="btn-all" onClick="filterHeavyModel('ALL')">
-        <i class="fa-solid fa-globe"></i> Todo
-      </button>
-      <button class="btn-heavy-model" id="btn-heavy" onClick="filterHeavyModel('HEAVY_ALL')">
-        <i class="fa-solid fa-layer-group"></i> Heavies
-      </button>
-      <button class="btn-heavy-model btn-mil" id="btn-mil" onClick="filterHeavyModel('MILITARY')">
-        <i class="fa-solid fa-shield-halved"></i> Militar
-      </button>
-
-      <select class="select-heavy-model" id="select-airline-filter" onChange="filterHeavyModel('AIRLINE_FILTER')">
-        <option value="ALL_AIRLINES" selected>🏢 Aerolínea: Todas</option>
-        <option value="VLG">💛 Vueling (VLG)</option>
-        <option value="IBE">🔴 Iberia (IBE)</option>
-        <option value="RYR">💙 Ryanair (RYR)</option>
-      </select>
-
-      <select class="select-heavy-model" id="select-alt-filter" onChange="filterHeavyModel('ALT_FILTER')">
-        <option value="ALL_ALT" selected>✈️ Altura: Todas</option>
-        <option value="3000">🛬 ≤ 3.000 ft</option>
-        <option value="6000">🛬 ≤ 6.000 ft</option>
-      </select>
-    </div>
+  <div class="heavy-selector-bar">
+    <button class="btn-heavy-model active" id="btn-all" onclick="setFilter('ALL')">Todo</button>
+    <button class="btn-heavy-model" id="btn-heavy" onclick="setFilter('HEAVY')">Heavies</button>
+    <button class="btn-heavy-model" id="btn-mil" onclick="setFilter('MIL')">Militar</button>
   </div>
 
   <div class="container">
-    <div class="panel" id="traffic-panel">
+    <div class="panel">
       <div class="panel-header">
-        <div class="left">
-          <i class="fa-solid fa-location-dot"></i>
-          <span id="tma-location-text">TMA BCN/ESP</span>
-          <span class="badge" id="filter-badge">TRÁFICO ADS-B (BCN)</span>
-        </div>
-        <span class="traffic-status" id="traffic-status">Conectando…</span>
-
-        <button class="btn-fullscreen" id="btn-fs" onClick="toggleFullscreen()">
-          <i class="fa-solid fa-expand" id="fs-icon"></i>
-          <span id="fs-text">Ampliar Mapa</span>
-        </button>
+        <span id="tma-text">TMA BCN · Posiciones en tiempo real</span>
+        <span class="traffic-status" id="traffic-status">Conectando...</span>
       </div>
-
-      <div id="traffic-map" role="application"></div>
+      <div id="traffic-map"></div>
     </div>
   </div>
 
-  <footer>
-    BCN · Satélite Spotters Spain
-  </footer>
-
-  <div class="neon-modal-overlay" id="helpModal">
-    <div class="neon-modal-card">
-      <div class="neon-modal-header">
-        <div class="neon-modal-title">
-          <i class="fa-solid fa-sliders"></i> Guía del Radar
-        </div>
-        <button class="neon-modal-close" onClick="closeModal()">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="neon-modal-body">
-        <div class="feature-item" onClick="toggleFeature(this)">
-          <div class="feature-header">
-            <div class="feature-title">Ficha al Tocar Avión</div>
-          </div>
-          <div class="feature-details">Al tocar un avión, verás su información en tiempo real.</div>
-        </div>
-      </div>
-      <div class="neon-modal-footer">
-        <button class="btn-neon-action" onClick="closeModal()">Entendido</button>
-      </div>
-    </div>
-  </div>
+  <footer>Spotters Spain · Datos de tráfico en directo</footer>
 
   <script>
-    const spanishAirports = {
-      BCN: { name: 'Barcelona-El Prat', lat: 41.30, lon: 2.08, zoom: 11, code: 'BCN' },
-      MAD: { name: 'Madrid-Barajas', lat: 40.48, lon: -3.56, zoom: 11, code: 'MAD' },
-      PMI: { name: 'Palma de Mallorca', lat: 39.55, lon: 2.73, zoom: 11, code: 'PMI' },
-      AGP: { name: 'Málaga-Costa del Sol', lat: 36.67, lon: -4.49, zoom: 11, code: 'AGP' },
-      VLC: { name: 'Valencia', lat: 39.49, lon: -0.48, zoom: 11, code: 'VLC' }
-    };
-
-    const aircraftModelNames = {
-      'A20N': 'Airbus A320neo', 'A21N': 'Airbus A321neo', 'A320': 'Airbus A320', 'A321': 'Airbus A321',
-      'A332': 'Airbus A330-200', 'A333': 'Airbus A330-300', 'A359': 'Airbus A350-900', 'A388': 'Airbus A380-800',
-      'B738': 'Boeing 737-800', 'B77W': 'Boeing 777-300ER', 'B788': 'Boeing 787-8', 'B789': 'Boeing 787-9'
-    };
-
-    let currentAirportKey = 'BCN';
-    let activeFilterMode = 'ALL';
-    let trafficMap, aircraftLayer, airportRange;
-    let aircraftSnapshot = [];
+    let map;
+    let aircraftLayer;
     let activeMarkers = new Map();
-    let requestInProgress = false;
-    const SEARCH_RADIUS_NM = 100;
-    const HEAVY_TYPES = new Set(['A332','A333','A338','A339','A342','A343','A345','A346','A359','A35K','A388','B744','B748','B772','B77L','B77W','B788','B789','B78X']);
+    let currentFilter = 'ALL';
+    
+    // Coordenadas base (Barcelona - El Prat)
+    const centerLat = 41.30;
+    const centerLon = 2.08;
+    const radiusNM = 100; // Radio de búsqueda en millas náuticas
+
+    // Categorías de aviones pesados (Widebody)
+    const HEAVY_TYPES = new Set(['A332','A333','A338','A339','A350','A359','A388','B744','B748','B772','B77W','B788','B789','B78X']);
 
     window.addEventListener('DOMContentLoaded', () => {
-      initTrafficMap();
+      initMap();
     });
 
-    function initTrafficMap() {
-      const apt = spanishAirports[currentAirportKey];
-      trafficMap = L.map('traffic-map', { zoomControl: true, preferCanvas: true }).setView([apt.lat, apt.lon], apt.zoom);
+    function initMap() {
+      map = L.map('traffic-map', { zoomControl: true }).setView([centerLat, centerLon], 10);
+      
+      // Capa de mapa oscuro/híbrido limpio de OpenStreetMap
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap'
-      }).addTo(trafficMap);
-      aircraftLayer = L.layerGroup().addTo(trafficMap);
-      airportRange = L.circle([apt.lat, apt.lon], { radius: SEARCH_RADIUS_NM * 1852, color: '#ffcc00', weight: 1, opacity: 0.65, fillColor: '#ffcc00', fillOpacity: 0.035 }).addTo(trafficMap);
-      loadAircraft();
-      window.setInterval(loadAircraft, 15000);
+      }).addTo(map);
+
+      aircraftLayer = L.layerGroup().addTo(map);
+
+      // Cargar al iniciar y refrescar cada 15 segundos
+      fetchAircraftPositions();
+      setInterval(fetchAircraftPositions, 15000);
     }
 
-    function escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-    }
-
-    function getAircraftAltitude(aircraft) {
-      const raw = aircraft.alt_baro ?? aircraft.alt_geom;
-      if (raw === 'ground') return 0;
-      const altitude = Number(raw);
-      return Number.isFinite(altitude) ? altitude : null;
-    }
-
-    async function loadAircraft() {
-      if (requestInProgress) return;
-      requestInProgress = true;
-      const apt = spanishAirports[currentAirportKey];
+    async function fetchAircraftPositions() {
       const status = document.getElementById('traffic-status');
-      status.textContent = 'Actualizando vuelos…';
+      status.textContent = 'Actualizando posiciones...';
+
       try {
-        const url = `https://api.adsb.lol/v2/lat/${apt.lat}/lon/${apt.lon}/dist/${SEARCH_RADIUS_NM}`;
-        const response = await fetch(url, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`API HTTP ${response.status}`);
+        // Petición directa a la API pública compatible con formato ADS-B
+        const url = `https://api.adsb.lol/v2/lat/${centerLat}/lon/${centerLon}/dist/${radiusNM}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        
         const data = await response.json();
-        aircraftSnapshot = Array.isArray(data.ac) ? data.ac : (Array.isArray(data.aircraft) ? data.aircraft : []);
-        renderAircraft();
-        const stamp = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        status.textContent = `${aircraftSnapshot.length} aeronaves · ${stamp}`;
+        const aircraftList = data.ac || data.aircraft || [];
+        
+        renderAircraft(aircraftList);
+        status.textContent = `${aircraftList.length} aeronaves activas`;
       } catch (error) {
-        status.textContent = 'No se pudieron cargar vuelos';
-        console.error('Error al consultar adsb.lol:', error);
-      } finally {
-        requestInProgress = false;
+        status.textContent = 'Error al actualizar posiciones';
+        console.error('Error fetching adsb data:', error);
       }
     }
 
-    function renderAircraft() {
-      if (!aircraftLayer) return;
-      const airlineSelect = document.getElementById('select-airline-filter');
-      const altSelect = document.getElementById('select-alt-filter');
-      const airlineCode = airlineSelect.value;
-      const altitudeFilter = altSelect.value;
-
-      const visibleAircraft = aircraftSnapshot.filter(aircraft => {
-        const flight = String(aircraft.flight || '').trim().toUpperCase();
-        const type = String(aircraft.t || '').trim().toUpperCase();
-        const altitude = getAircraftAltitude(aircraft);
-        if (activeFilterMode === 'HEAVY_ALL' && !HEAVY_TYPES.has(type) && aircraft.category !== 'A5') return false;
-        if (activeFilterMode === 'MILITARY' && !aircraft.mil) return false;
-        if (activeFilterMode === 'AIRLINE_FILTER' && airlineCode !== 'ALL_AIRLINES' && !flight.startsWith(airlineCode)) return false;
-        if (activeFilterMode === 'ALT_FILTER' && altitudeFilter === 'HIGH_ALT' && (altitude === null || altitude < 20000)) return false;
-        if (activeFilterMode === 'ALT_FILTER' && altitudeFilter !== 'ALL_ALT' && altitudeFilter !== 'HIGH_ALT' && (altitude === null || altitude > Number(altitudeFilter))) return false;
-        return aircraft.lat != null && aircraft.lon != null;
-      });
-
+    function renderAircraft(aircraftList) {
       const currentIds = new Set();
 
-      for (const aircraft of visibleAircraft) {
-        const id = aircraft.hex || aircraft.flight || `${aircraft.lat},${aircraft.lon}`;
+      aircraftList.forEach(ac => {
+        if (ac.lat == null || ac.lon == null) return;
+
+        const type = String(ac.t || '').toUpperCase();
+        const isMil = ac.mil === true;
+        const isHeavy = HEAVY_TYPES.has(type) || ac.category === 'A5';
+
+        // Aplicar filtros locales de la botonera
+        if (currentFilter === 'HEAVY' && !isHeavy) return;
+        if (currentFilter === 'MIL' && !isMil) return;
+
+        const id = ac.hex || `${ac.lat},${ac.lon}`;
         currentIds.add(id);
 
-        const targetLat = Number(aircraft.lat);
-        const targetLon = Number(aircraft.lon);
-        const targetHeading = Number(aircraft.track) || 0;
-        const flight = String(aircraft.flight || '').trim() || aircraft.hex || 'Aeronave';
-        const rawType = String(aircraft.t || '').trim().toUpperCase();
-        const modelName = aircraftModelNames[rawType] || (rawType ? `Tipo: ${rawType}` : 'Modelo no especificado');
-        const altitudeValue = getAircraftAltitude(aircraft);
-        const altitude = aircraft.alt_baro === 'ground' ? 'En tierra' : (altitudeValue === null ? '—' : `${Math.round(altitudeValue).toLocaleString('es-ES')} ft`);
-        const speed = aircraft.gs == null ? '—' : `${Math.round(Number(aircraft.gs))} kt`;
-        const routeInfo = aircraft.route ? escapeHtml(aircraft.route) : '—';
+        const lat = Number(ac.lat);
+        const lon = Number(ac.lon);
+        const track = Number(ac.track) || 0;
+        const flight = String(ac.flight || '').trim() || ac.hex || 'N/A';
+        const altitude = ac.alt_baro === 'ground' ? 'En tierra' : `${ac.alt_baro || '—'} ft`;
+        const speed = `${Math.round(ac.gs || 0)} kt`;
 
-        const iconHtml = `<div class="fr24-plane-container" style="transform: rotate(${targetHeading}deg);"><svg width="26" height="26" viewBox="0 0 24 24" fill="#ffcc00" stroke="#000000" stroke-width="1.2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div>`;
-        const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [26, 26], iconAnchor: [13, 13] });
+        // HTML del icono del avión rotado con CSS transform
+        const iconHtml = `
+          <div class="fr24-plane-container" style="transform: rotate(${track}deg);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffcc00" stroke="#000000" stroke-width="1">
+              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            </svg>
+          </div>`;
 
-        const popupContent = `<strong>Vuelo:</strong> ${escapeHtml(flight)}<br><strong>Modelo:</strong> ${escapeHtml(modelName)}<br><strong>Matrícula:</strong> ${escapeHtml(aircraft.r || '—')}<br><strong>Altitud:</strong> ${altitude}<br><strong>Velocidad:</strong> ${speed}<br><strong>Ruta:</strong> ${routeInfo}`;
+        const customIcon = L.divIcon({
+          html: iconHtml,
+          className: '',
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        });
+
+        const popupContent = `
+          <div style="font-size: 0.75rem; color: #000;">
+            <strong>Vuelo:</strong> ${flight}<br>
+            <strong>Modelo:</strong> ${type || 'Desconocido'}<br>
+            <strong>Altitud:</strong> ${altitude}<br>
+            <strong>Velocidad:</strong> ${speed}
+          </div>`;
 
         if (activeMarkers.has(id)) {
+          // Actualizar posición y rotación sin recrear el marcador (movimiento fluido)
           const marker = activeMarkers.get(id);
-          marker.setLatLng([targetLat, targetLon]);
+          marker.setLatLng([lat, lon]);
           marker.setIcon(customIcon);
           marker.getPopup().setContent(popupContent);
         } else {
-          const marker = L.marker([targetLat, targetLon], { icon: customIcon }).bindPopup(popupContent);
+          // Crear marcador nuevo
+          const marker = L.marker([lat, lon], { icon: customIcon }).bindPopup(popupContent);
           aircraftLayer.addLayer(marker);
           activeMarkers.set(id, marker);
         }
-      }
+      });
 
+      // Eliminar del mapa los aviones que ya salieron del radio o murieron
       for (const [id, marker] of activeMarkers.entries()) {
         if (!currentIds.has(id)) {
           aircraftLayer.removeLayer(marker);
@@ -729,48 +279,14 @@
       }
     }
 
-    function changeAirport() {
-      const selectApt = document.getElementById('select-airport-filter');
-      currentAirportKey = selectApt.value;
-      const apt = spanishAirports[currentAirportKey];
-
-      document.getElementById('fr24-link').href = `https://www.flightradar24.com/${apt.lat},${apt.lon}/${apt.zoom}`;
-      document.getElementById('tma-location-text').textContent = `TMA ${apt.code}/ESP`;
-      document.getElementById('filter-badge').textContent = `TRÁFICO ADS-B (${apt.code})`;
-
-      trafficMap.setView([apt.lat, apt.lon], apt.zoom);
-      airportRange.setLatLng([apt.lat, apt.lon]);
-      loadAircraft();
-    }
-
-    function filterHeavyModel(mode) {
-      activeFilterMode = mode;
+    function setFilter(filter) {
+      currentFilter = filter;
       document.querySelectorAll('.btn-heavy-model').forEach(b => b.classList.remove('active'));
-      if (mode === 'ALL') document.getElementById('btn-all').classList.add('active');
-      if (mode === 'HEAVY_ALL') document.getElementById('btn-heavy').classList.add('active');
-      if (mode === 'MILITARY') document.getElementById('btn-mil').classList.add('active');
-      renderAircraft();
+      if (filter === 'ALL') document.getElementById('btn-all').classList.add('active');
+      if (filter === 'HEAVY') document.getElementById('btn-heavy').classList.add('active');
+      if (filter === 'MIL') document.getElementById('btn-mil').classList.add('active');
+      fetchAircraftPositions();
     }
-
-    function toggleFullscreen() {
-      const panel = document.getElementById('traffic-panel');
-      const icon = document.getElementById('fs-icon');
-      const text = document.getElementById('fs-text');
-      panel.classList.toggle('fullscreen');
-      document.body.classList.toggle('fs-active');
-      if (panel.classList.contains('fullscreen')) {
-        icon.className = 'fa-solid fa-compress';
-        text.textContent = 'Minimizar';
-      } else {
-        icon.className = 'fa-solid fa-expand';
-        text.textContent = 'Ampliar Mapa';
-      }
-      setTimeout(() => trafficMap.invalidateSize(), 250);
-    }
-
-    function openModal() { document.getElementById('helpModal').classList.add('active'); }
-    function closeModal() { document.getElementById('helpModal').classList.remove('active'); }
-    function toggleFeature(el) { el.classList.toggle('active'); }
   </script>
 </body>
 </html>
