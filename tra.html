@@ -349,7 +349,6 @@
       width: 100vw;
       height: 100vh;
       background: #0b0f19;
-
     }
 
     /* Marcadores de avión */
@@ -506,7 +505,6 @@
       gap: 8px;
       padding: 6px 14px;
       background: #dc2626;
-
       color: #ffffff;
       font-size: 11px;
       font-weight: 800;
@@ -1762,8 +1760,9 @@
         const airport = AIRPORTS[requestedAirportCode];
         const receivedAt = Date.now();
 
+        // Petición directa a la API pública de ADS-B
         const response = await fetch(
-          `/api/aircraft?lat=${airport.lat}&lon=${airport.lon}&radius=${AIRCRAFT_RADIUS_NM}`
+          `https://api.adsb.lol/v2/lat/${airport.lat}/lon/${airport.lon}/dist/${AIRCRAFT_RADIUS_NM}`
         );
 
         if (response.status === 429) {
