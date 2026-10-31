@@ -29,7 +29,8 @@
       transition: opacity 0.2s ease-in-out;
     }
 
-    .leaflet-marker-icon.plane-icon {
+    .leaflet-marker-icon.plane-icon,
+    .leaflet-marker-icon.airport-tower-icon {
       will-change: transform;
     }
 
@@ -52,13 +53,8 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    header::-webkit-scrollbar {
-      display: none;
-    }
-    header {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+    header::-webkit-scrollbar { display: none; }
+    header { -ms-overflow-style: none; scrollbar-width: none; }
 
     .brand-title {
       display: flex;
@@ -123,10 +119,7 @@
       flex-shrink: 0;
     }
 
-    #heavies-button:hover {
-      background: rgba(245, 158, 11, 0.2);
-    }
-
+    #heavies-button:hover { background: rgba(245, 158, 11, 0.2); }
     #heavies-button.active {
       border-color: #f59e0b;
       background: #f59e0b;
@@ -178,46 +171,6 @@
       cursor: pointer;
     }
 
-    .heavies-photo-box {
-      width: 100%;
-      height: 140px;
-      border-radius: 8px;
-      background: #1e293b;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    #heavy-modal-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    #heavy-modal-msg {
-      color: #64748b;
-      font-size: 11px;
-      text-align: center;
-    }
-
-    #heavy-modal-credit {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.75);
-      color: #cbd5e1;
-      font-size: 8px;
-      padding: 2px 4px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
     .heavies-list-container {
       display: flex;
       flex-direction: column;
@@ -240,7 +193,7 @@
     .heavy-item-model { color: #f8fafc; font-size: 11px; font-weight: 700; }
     .heavy-item-callsign { color: #38bdf8; font-size: 10px; font-weight: 600; }
 
-    /* MODAL DE EXPLICACIÓN */
+    /* MODAL DE EXPLICACIÓN METRICA */
     #metric-explain-modal {
       position: fixed;
       top: 50%;
@@ -324,7 +277,7 @@
 
     #map { width: 100vw; height: 100vh; background: #0b0f19; }
 
-    .plane-icon {
+    .plane-icon, .airport-tower-icon {
       overflow: visible;
       border: 0;
       background: transparent;
@@ -401,34 +354,47 @@
       stroke-linejoin: round;
     }
 
-    /* ESTILO ESPECÍFICO DE LA TORRE DISCRETA EN EL MAPA */
-    .tower-display {
+    /* ESTILO TORRE Y PINES DE CONTROL MUY PEQUEÑOS */
+    .airport-tower-badge {
       position: relative;
-      width: 32px;
-      height: 32px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #f59e0b;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
 
-    .tower-symbol {
-      width: 22px;
-      height: 22px;
-      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.8));
+    .airport-tower-badge:hover {
+      transform: scale(1.3);
+      background: rgba(245, 158, 11, 0.3);
     }
 
-    .tower-symbol path {
-      fill: #e2e8f0;
-      stroke: #0f172a;
-      stroke-width: 1.5;
+    .airport-tower-svg {
+      width: 10px;
+      height: 10px;
+      fill: #f59e0b;
     }
 
-    .plane-display.tower-display.selected .tower-symbol {
-      filter: drop-shadow(0 0 8px #facc15);
-    }
-
-    .plane-display.tower-display.selected .tower-symbol path {
-      fill: #facc15;
+    .airport-tower-label {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      color: #fbbf24;
+      font-size: 7px;
+      font-weight: 800;
+      padding: 0px 3px;
+      border-radius: 2px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      white-space: nowrap;
+      pointer-events: none;
     }
 
     .plane-label {
@@ -478,7 +444,7 @@
       border-radius: 50%;
     }
 
-    /* TARJETA COMPACTA */
+    /* TARJETA DE VUELO */
     #flight-panel {
       position: fixed;
       z-index: 1100;
@@ -496,29 +462,6 @@
 
     #flight-panel.visible { display: block; }
 
-    .emergency-banner {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 4px 10px;
-      background: #dc2626;
-      color: #ffffff;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      box-shadow: 0 0 10px #ef4444;
-      animation: neonPulse 1s infinite alternate;
-    }
-
-    .emergency-banner.active { display: flex; }
-
-    @keyframes neonPulse {
-      0% { background: #991b1b; box-shadow: 0 0 6px #ef4444; }
-      100% { background: #dc2626; box-shadow: 0 0 18px #ef4444; }
-    }
-
     .fr24-full-wrapper {
       display: flex;
       flex-direction: row !important;
@@ -527,44 +470,180 @@
       min-height: 85px;
     }
 
-    .fr24-photo-container {
+    /* WIDGET INTERACTIVO DE 4 MODOS EN LUGAR DE FOTO */
+    .fr24-interactive-widget {
       position: relative;
-      width: 130px;
-      min-width: 130px;
-      background: #1e293b;
+      width: 120px;
+      min-width: 120px;
+      background: #090d16;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       border-right: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+      padding: 4px;
+      cursor: pointer;
+      user-select: none;
     }
 
-    #flight-photo {
+    .fr24-interactive-widget:hover {
+      background: #0d1527;
+    }
+
+    .widget-mode-indicator {
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      font-size: 7px;
+      font-weight: 800;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+
+    /* MODO 1: RADAR */
+    .widget-mode-box {
       width: 100%;
       height: 100%;
-      object-fit: cover;
       display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    #photo-message {
-      color: #64748b;
-      font-size: 9px;
+    .widget-mode-box.active { display: flex; }
+
+    .radar-box {
+      position: relative;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, rgba(15,23,42,0.8) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radar-crosshair-v, .radar-crosshair-h {
+      position: absolute;
+      background: rgba(56, 189, 248, 0.2);
+    }
+    .radar-crosshair-v { width: 1px; height: 100%; }
+    .radar-crosshair-h { height: 1px; width: 100%; }
+
+    .radar-heading-arrow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .radar-plane-icon {
+      width: 20px;
+      height: 20px;
+      fill: #f59e0b;
+      filter: drop-shadow(0 0 4px #f59e0b);
+    }
+
+    .radar-label {
+      font-size: 8px;
+      font-weight: 800;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+    }
+
+    /* MODO 2: SQUAWK & FASE */
+    .squawk-badge-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .squawk-code-val {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: #10b981;
+      text-shadow: 0 0 8px currentColor;
+    }
+
+    .squawk-state-lbl {
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    /* MODO 3: FICHA TÉCNICA Y SILUETA SVG */
+    .tech-sheet-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 100%;
       text-align: center;
+    }
+
+    .tech-silhouette-svg {
+      width: 42px;
+      height: 28px;
+      fill: #38bdf8;
+      filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5));
+    }
+
+    .tech-info-line {
+      font-size: 8px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .tech-sub-line {
+      font-size: 7.5px;
+      color: #94a3b8;
+    }
+
+    /* MODO 4: BOTÓN EXT SERVICIOS */
+    .ext-link-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
       padding: 4px;
     }
 
-    #photo-credit {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.75);
-      color: #cbd5e1;
-      font-size: 7px;
-      padding: 1px 3px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+    .ext-link-btn {
+      width: 100%;
+      padding: 5px 4px;
+      border-radius: 6px;
+      border: 1px solid #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+    }
+
+    .ext-link-btn:hover {
+      background: #38bdf8;
+      color: #0f172a;
     }
 
     .fr24-data-container {
@@ -729,8 +808,92 @@
       margin-top: 1px;
     }
 
+    /* TARJETA RESUMEN DE AEROPUERTO / TORRE DE CONTROL */
+    #airport-panel {
+      position: fixed;
+      z-index: 1200;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 440px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(14px);
+      border: 1px solid #f59e0b;
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.3), 0 10px 30px rgba(0, 0, 0, 0.85);
+    }
+
+    #airport-panel.visible { display: flex; }
+
+    .airport-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 6px;
+    }
+
+    .airport-panel-title {
+      color: #f59e0b;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .airport-panel-close {
+      background: transparent;
+      border: 0;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .airport-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .stat-card {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 18px;
+      font-weight: 900;
+      color: #f8fafc;
+    }
+
+    .stat-val.landing { color: #38bdf8; }
+    .stat-val.ground { color: #10b981; }
+
+    .stat-lbl {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
     @media (max-width: 850px) {
-      .fr24-photo-container {
+      .fr24-interactive-widget {
         width: 100px;
         min-width: 100px;
       }
@@ -816,27 +979,83 @@
       <button id="heavies-modal-close" class="heavies-modal-close" type="button">✕</button>
     </div>
 
-    <div class="heavies-photo-box">
-      <img id="heavy-modal-img" alt="Foto del heavy seleccionado">
-      <div id="heavy-modal-msg">Selecciona un modelo abajo</div>
-      <div id="heavy-modal-credit"></div>
-    </div>
-
     <div id="heavies-list-container" class="heavies-list-container"></div>
+  </aside>
+
+  <!-- TARJETA TORRE DE CONTROL DE AEROPUERTO -->
+  <aside id="airport-panel">
+    <div class="airport-panel-header">
+      <div id="airport-panel-name" class="airport-panel-title">📡 TORRE DE CONTROL BCN</div>
+      <button id="airport-panel-close" class="airport-panel-close" type="button">✕</button>
+    </div>
+    <div class="airport-stats-grid">
+      <div class="stat-card">
+        <span id="stat-ground-count" class="stat-val ground">0</span>
+        <span class="stat-lbl">En Tierra</span>
+      </div>
+      <div class="stat-card">
+        <span id="stat-landing-count" class="stat-val landing">0</span>
+        <span class="stat-lbl">Aproximando</span>
+      </div>
+      <div class="stat-card">
+        <span id="stat-total-count" class="stat-val">0</span>
+        <span class="stat-lbl">Tráfico Zona</span>
+      </div>
+    </div>
   </aside>
 
   <div id="map"></div>
 
   <section id="flight-panel" aria-live="polite">
-    <div id="emergency-banner" class="emergency-banner">
-      <span>🚨 SQUAWK EMERGENCY: <strong id="emergency-type">7700 GENERAL EMERGENCY</strong></span>
-    </div>
-
     <div class="fr24-full-wrapper">
-      <div class="fr24-photo-container">
-        <img id="flight-photo" alt="Foto de la unidad">
-        <div id="photo-message">Selecciona un elemento</div>
-        <div id="photo-credit"></div>
+      <!-- WIDGET DE 4 MODOS MULTIFUNCIÓN (TAP/CLIC PARA CAMBIAR) -->
+      <div id="interactive-widget" class="fr24-interactive-widget" title="Haz clic para cambiar modo">
+        <span id="widget-mode-tag" class="widget-mode-indicator">MODO 1/4</span>
+
+        <!-- MODO 1: RADAR / HSI -->
+        <div id="widget-mode-1" class="widget-mode-box active">
+          <div class="radar-box">
+            <div class="radar-crosshair-v"></div>
+            <div class="radar-crosshair-h"></div>
+            <div id="radar-heading-arrow" class="radar-heading-arrow">
+              <svg id="radar-icon-svg" class="radar-plane-icon" viewBox="0 0 32 32">
+                <path d="M16 1.5c1.1 0 1.7.9 1.9 2.1l1.5 10.2 9 5.1c.8.5 1.1 1.2.8 2-.2.6-.8.8-1.6.6l-8.5-2.4 1.1 7.1 3.4 2.1c.6.4.8 1 .6 1.5-.2.5-.7.7-1.3.5L16 27.8 9.1 30.3c-.6.2-1.1 0-1.3-.5-.2-.5 0-1.1.6-1.5l3.4-2.1 1.1-7.1-8.5 2.4c-.8.2-1.4 0-1.6-.6-.3-.8 0-1.5.8-2l9-5.1 1.5-10.2c.2-1.2.8-2.1 1.9-2.1z"/>
+              </svg>
+            </div>
+          </div>
+          <span id="radar-label" class="radar-label">TRK 000°</span>
+        </div>
+
+        <!-- MODO 2: SQUAWK & TRANSPO -->
+        <div id="widget-mode-2" class="widget-mode-box">
+          <div class="squawk-badge-box">
+            <span style="font-size:7.5px; color:#64748b; font-weight:800;">SQUAWK</span>
+            <span id="squawk-code-disp" class="squawk-code-val">7000</span>
+            <span id="squawk-state-disp" class="squawk-state-lbl">CRUCERO</span>
+          </div>
+        </div>
+
+        <!-- MODO 3: FICHA TÉCNICA Y SILUETA -->
+        <div id="widget-mode-3" class="widget-mode-box">
+          <div class="tech-sheet-box">
+            <svg class="tech-silhouette-svg" viewBox="0 0 32 32">
+              <path d="M16 1.5c1.1 0 1.7.9 1.9 2.1l1.5 10.2 9 5.1c.8.5 1.1 1.2.8 2-.2.6-.8.8-1.6.6l-8.5-2.4 1.1 7.1 3.4 2.1c.6.4.8 1 .6 1.5-.2.5-.7.7-1.3.5L16 27.8 9.1 30.3c-.6.2-1.1 0-1.3-.5-.2-.5 0-1.1.6-1.5l3.4-2.1 1.1-7.1-8.5 2.4c-.8.2-1.4 0-1.6-.6-.3-.8 0-1.5.8-2l9-5.1 1.5-10.2c.2-1.2.8-2.1 1.9-2.1z"/>
+            </svg>
+            <span id="tech-engine-type" class="tech-info-line">REACTOR</span>
+            <span id="tech-wake-cat" class="tech-sub-line">WAKE: HEAVY</span>
+            <span id="tech-country-hex" class="tech-sub-line">HEX: ESPAÑA</span>
+          </div>
+        </div>
+
+        <!-- MODO 4: ENLACE BÚSQUEDA EXTERNA -->
+        <div id="widget-mode-4" class="widget-mode-box">
+          <div class="ext-link-box">
+            <span style="font-size:7.5px; color:#94a3b8; font-weight:800;">VER FOTO EN</span>
+            <a id="ext-planespotters-btn" class="ext-link-btn" target="_blank" href="#">Planespotters</a>
+            <a id="ext-jetphotos-btn" class="ext-link-btn" style="border-color:#f59e0b; color:#f59e0b; background:rgba(245,158,11,0.15);" target="_blank" href="#">JetPhotos</a>
+          </div>
+        </div>
+
       </div>
 
       <div class="fr24-data-container">
@@ -939,31 +1158,31 @@
     };
 
     const AIRPORTS = {
-      BCN: { name: 'El Prat', lat: 41.2974, lon: 2.0833 },
-      MAD: { name: 'Barajas', lat: 40.4983, lon: -3.5676 },
-      AGP: { name: 'Málaga', lat: 36.6749, lon: -4.4991 },
-      ALC: { name: 'Alicante', lat: 38.2822, lon: -0.5581 },
-      VLC: { name: 'Valencia', lat: 39.4893, lon: -0.4816 },
-      SVQ: { name: 'Sevilla', lat: 37.4179, lon: -5.8931 },
-      BIO: { name: 'Bilbao', lat: 43.3011, lon: -2.9106 },
-      PMI: { name: 'Palma', lat: 39.5517, lon: 2.7388 },
-      TFS: { name: 'Tenerife Sur', lat: 28.0445, lon: -16.5725 },
-      TFN: { name: 'Tenerife Norte', lat: 28.4827, lon: -16.3415 },
-      LPA: { name: 'Gran Canaria', lat: 27.9319, lon: -15.3866 },
-      IBZ: { name: 'Ibiza', lat: 38.8729, lon: 1.3731 },
-      MAH: { name: 'Menorca', lat: 39.8626, lon: 4.2186 },
-      GRO: { name: 'Girona', lat: 41.9009, lon: 2.7605 },
-      SCQ: { name: 'Santiago', lat: 42.8963, lon: -8.4151 },
-      OVD: { name: 'Asturias', lat: 43.5636, lon: -6.0346 },
-      ZAZ: { name: 'Zaragoza', lat: 41.6662, lon: -1.0416 },
-      GRX: { name: 'Granada', lat: 37.1887, lon: -3.7774 },
-      LEI: { name: 'Almería', lat: 36.8439, lon: -2.3701 },
-      VGO: { name: 'Vigo', lat: 42.2318, lon: -8.6268 },
-      FUE: { name: 'Fuerteventura', lat: 28.4527, lon: -13.8638 },
-      ACE: { name: 'Lanzarote', lat: 28.9455, lon: -13.6052 },
-      SPC: { name: 'La Palma', lat: 28.6265, lon: -17.7556 },
-      XRY: { name: 'Jerez', lat: 36.7446, lon: -6.0601 },
-      RMU: { name: 'Murcia', lat: 37.8030, lon: -1.1250 }
+      BCN: { name: 'El Prat (BCN)', lat: 41.2974, lon: 2.0833 },
+      MAD: { name: 'Barajas (MAD)', lat: 40.4983, lon: -3.5676 },
+      AGP: { name: 'Málaga (AGP)', lat: 36.6749, lon: -4.4991 },
+      ALC: { name: 'Alicante (ALC)', lat: 38.2822, lon: -0.5581 },
+      VLC: { name: 'Valencia (VLC)', lat: 39.4893, lon: -0.4816 },
+      SVQ: { name: 'Sevilla (SVQ)', lat: 37.4179, lon: -5.8931 },
+      BIO: { name: 'Bilbao (BIO)', lat: 43.3011, lon: -2.9106 },
+      PMI: { name: 'Palma (PMI)', lat: 39.5517, lon: 2.7388 },
+      TFS: { name: 'Tenerife Sur (TFS)', lat: 28.0445, lon: -16.5725 },
+      TFN: { name: 'Tenerife Norte (TFN)', lat: 28.4827, lon: -16.3415 },
+      LPA: { name: 'Gran Canaria (LPA)', lat: 27.9319, lon: -15.3866 },
+      IBZ: { name: 'Ibiza (IBZ)', lat: 38.8729, lon: 1.3731 },
+      MAH: { name: 'Menorca (MAH)', lat: 39.8626, lon: 4.2186 },
+      GRO: { name: 'Girona (GRO)', lat: 41.9009, lon: 2.7605 },
+      SCQ: { name: 'Santiago (SCQ)', lat: 42.8963, lon: -8.4151 },
+      OVD: { name: 'Asturias (OVD)', lat: 43.5636, lon: -6.0346 },
+      ZAZ: { name: 'Zaragoza (ZAZ)', lat: 41.6662, lon: -1.0416 },
+      GRX: { name: 'Granada (GRX)', lat: 37.1887, lon: -3.7774 },
+      LEI: { name: 'Almería (LEI)', lat: 36.8439, lon: -2.3701 },
+      VGO: { name: 'Vigo (VGO)', lat: 42.2318, lon: -8.6268 },
+      FUE: { name: 'Fuerteventura (FUE)', lat: 28.4527, lon: -13.8638 },
+      ACE: { name: 'Lanzarote (ACE)', lat: 28.9455, lon: -13.6052 },
+      SPC: { name: 'La Palma (SPC)', lat: 28.6265, lon: -17.7556 },
+      XRY: { name: 'Jerez (XRY)', lat: 36.7446, lon: -6.0601 },
+      RMU: { name: 'Murcia (RMU)', lat: 37.8030, lon: -1.1250 }
     };
 
     const AIRLINES = {
@@ -999,10 +1218,10 @@
     }).addTo(map);
 
     const markers = L.layerGroup().addTo(map);
+    const airportTowersGroup = L.layerGroup().addTo(map);
     const markerByKey = new Map();
     const samplesByKey = new Map();
     const tracks = new Map();
-    const photoCache = new Map();
 
     const centerRing = L.circle([AIRPORTS.BCN.lat, AIRPORTS.BCN.lon], {
       radius: AIRCRAFT_RADIUS_NM * 1852, color: '#f59e0b', weight: 1.5, dashArray: '4, 6', fillOpacity: 0.02
@@ -1030,10 +1249,13 @@
     const heaviesModalClose = document.getElementById('heavies-modal-close');
     const heaviesListContainer = document.getElementById('heavies-list-container');
     const flightPanel = document.getElementById('flight-panel');
+    const airportPanel = document.getElementById('airport-panel');
+    const airportPanelClose = document.getElementById('airport-panel-close');
     const explainModal = document.getElementById('metric-explain-modal');
     const explainClose = document.getElementById('explain-close');
     const modalOverlay = document.getElementById('modal-overlay');
 
+    let currentWidgetMode = 1;
     let busy = false;
     let pollTimer = null;
     let nextRequestAt = 0;
@@ -1059,7 +1281,6 @@
       return String(aircraft.flight || '').trim().toUpperCase();
     }
 
-    /* DETECCIÓN DE TORRE / ESTACIÓN FIJA */
     function isTower(aircraft) {
       const callsign = getCallsign(aircraft);
       const type = String(aircraft.t || '').toUpperCase();
@@ -1172,31 +1393,100 @@
       return bearingBetween({ lat: a[0], lon: a[1] }, { lat: b[0], lon: b[1] }) ?? Number(fallbackHeading) ?? 0;
     }
 
-    /* GENERADOR DE ICONO CON DISTINCIÓN DE TORRE */
+    /* RENDERIZADO DE TORRES FIJAS DE LOS AEROPUERTOS MUY PEQUEÑAS */
+    function renderAirportTowers() {
+      airportTowersGroup.clearLayers();
+
+      Object.entries(AIRPORTS).forEach(([code, apt]) => {
+        const towerIcon = L.divIcon({
+          className: 'airport-tower-icon',
+          html: `
+            <div class="airport-tower-badge" title="Torre ${apt.name}">
+              <span class="airport-tower-label">${code}</span>
+              <svg class="airport-tower-svg" viewBox="0 0 24 24">
+                <path d="M12 2a2 2 0 100 4 2 2 0 000-4zm0 6a1 1 0 00-1 1v2.1l-2.6 7.8A1 1 0 009.3 20h5.4a1 1 0 001-.81L13 11.1V9a1 1 0 00-1-1zm-6.2 3.8a1 1 0 00-1.4 1.4 7 7 0 010 9.6 1 1 0 101.4-1.4 5 5 0 000-6.8zm12.4 0a5 5 0 000 6.8 1 1 0 101.4 1.4 7 7 0 010-9.6 1 1 0 00-1.4 1.4zM2.8 8.8a1 1 0 00-1.4 1.4 11 11 0 010 15.6 1 1 0 101.4-1.4 9 9 0 000-12.8zm18.4 0a9 9 0 000 12.8 1 1 0 101.4 1.4 11 11 0 00-1.4 1.4z"/>
+              </svg>
+            </div>
+          `,
+          iconSize: [18, 18],
+          iconAnchor: [9, 9]
+        });
+
+        const towerMarker = L.marker([apt.lat, apt.lon], { icon: towerIcon, zIndexOffset: 800 });
+        towerMarker.on('click', () => {
+          openAirportTowerPanel(code, apt);
+        });
+        towerMarker.addTo(airportTowersGroup);
+      });
+    }
+
+    function openAirportTowerPanel(code, apt) {
+      flightPanel.classList.remove('visible');
+      
+      let countGround = 0;
+      let countLanding = 0;
+      let countTotal = 0;
+
+      latestAircraft.forEach(ac => {
+        if (ac.lat == null || ac.lon == null) return;
+
+        const distNM = calculateDistanceNM(apt.lat, apt.lon, ac.lat, ac.lon);
+        
+        if (distNM <= AIRCRAFT_RADIUS_NM) {
+          countTotal++;
+        }
+
+        const alt = getAltitude(ac);
+        const gs = Number(ac.gs) || 0;
+        const vspeed = Number(ac.baro_rate) || Number(ac.geom_rate) || 0;
+
+        if (distNM <= 10 && (!aircraftIsAirborne(ac) || (alt !== null && alt <= 300) || gs < 30)) {
+          countGround++;
+        } 
+        else if (distNM <= 25 && aircraftIsAirborne(ac)) {
+          const headingToAirport = bearingBetween({ lat: ac.lat, lon: ac.lon }, { lat: apt.lat, lon: apt.lon });
+          const track = Number(ac.track) || 0;
+          
+          let headingDiff = 180;
+          if (headingToAirport !== null) {
+            headingDiff = Math.abs((track - headingToAirport + 180) % 360 - 180);
+          }
+
+          if (alt !== null && alt < 10000 && (vspeed < 0 || gs < 220) && headingDiff < 60) {
+            countLanding++;
+          }
+        }
+      });
+
+      document.getElementById('airport-panel-name').textContent = `📡 TORRE DE CONTROL ${apt.name.toUpperCase()}`;
+      document.getElementById('stat-ground-count').textContent = countGround;
+      document.getElementById('stat-landing-count').textContent = countLanding;
+      document.getElementById('stat-total-count').textContent = countTotal;
+
+      airportPanel.classList.add('visible');
+    }
+
     function planeIcon(aircraft, heading, isSelected = false) {
       const callsign = getCallsign(aircraft);
       const label = callsign || getAirlineName(aircraft);
       const selectedClass = isSelected ? 'selected' : '';
 
-      // Si es la Torre de Control / Estación Fija
       if (isTower(aircraft)) {
         return L.divIcon({
           className: 'plane-icon',
           html: `
             <div class="plane-display tower-display ${selectedClass}">
               <svg class="tower-symbol" viewBox="0 0 24 24">
-                <!-- Icono Antena / Torre de Emisión -->
-                <path d="M12 2a2 2 0 100 4 2 2 0 000-4zm0 6a1 1 0 00-1 1v2.1l-2.6 7.8A1 1 0 009.3 20h5.4a1 1 0 001-.81L13 11.1V9a1 1 0 00-1-1zm-6.2 3.8a1 1 0 00-1.4 1.4 7 7 0 010 9.6 1 1 0 101.4-1.4 5 5 0 000-6.8zm12.4 0a5 5 0 000 6.8 1 1 0 101.4 1.4 7 7 0 010-9.6 1 1 0 00-1.4 1.4zM2.8 8.8a1 1 0 00-1.4 1.4 11 11 0 010 15.6 1 1 0 101.4-1.4 9 9 0 000-12.8zm18.4 0a9 9 0 000 12.8 1 1 0 101.4 1.4 11 11 0 010-15.6 1 1 0 00-1.4 1.4z"/>
+                <path d="M12 2a2 2 0 100 4 2 2 0 000-4zm0 6a1 1 0 00-1 1v2.1l-2.6 7.8A1 1 0 009.3 20h5.4a1 1 0 001-.81L13 11.1V9a1 1 0 00-1-1zm-6.2 3.8a1 1 0 00-1.4 1.4 7 7 0 010 9.6 1 1 0 101.4-1.4 5 5 0 000-6.8zm12.4 0a5 5 0 000 6.8 1 1 0 101.4 1.4 7 7 0 010-9.6 1 1 0 00-1.4 1.4zM2.8 8.8a1 1 0 00-1.4 1.4 11 11 0 010 15.6 1 1 0 101.4-1.4 9 9 0 000-12.8zm18.4 0a9 9 0 000 12.8 1 1 0 101.4 1.4 11 11 0 00-1.4 1.4z"/>
               </svg>
               <span class="plane-label" style="top:-14px; left:26px;">${escapeHtml(label)}</span>
             </div>
           `,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
         });
       }
 
-      // De lo contrario, dibujamos el Avión normal
       const size = aircraftSize(aircraft);
       const lift = altitudeLift(aircraft);
       const color = altitudeColor(aircraft);
@@ -1318,33 +1608,6 @@
       explainModal.classList.remove('active');
     }
 
-    async function loadHeavyModalPhoto(aircraft) {
-      const imgElem = document.getElementById('heavy-modal-img');
-      const msgElem = document.getElementById('heavy-modal-msg');
-      const creditElem = document.getElementById('heavy-modal-credit');
-
-      imgElem.style.display = 'none';
-      imgElem.removeAttribute('src');
-      creditElem.textContent = '';
-      msgElem.textContent = 'Cargando foto…';
-
-      if (!aircraft) {
-        msgElem.textContent = 'No hay Heavies volando en la zona';
-        return;
-      }
-
-      const photo = await getPhoto(aircraft.hex, aircraft.r, aircraft.t);
-
-      if (photo?.thumbnail?.src) {
-        imgElem.src = photo.thumbnail.src;
-        imgElem.style.display = 'block';
-        msgElem.textContent = '';
-        creditElem.textContent = `© ${photo.photographer || 'Planespotters.net'}`;
-      } else {
-        msgElem.textContent = `Sin foto disponible para ${aircraft.t || 'este avión'}`;
-      }
-    }
-
     function updateHeaviesModalList(aircraftList) {
       const heavies = aircraftList.filter(ac => isHeavy(ac));
       heaviesListContainer.innerHTML = '';
@@ -1359,21 +1622,13 @@
             <span class="heavy-item-callsign">${escapeHtml(getCallsign(ac) || ac.hex)}</span>
           `;
           chip.addEventListener('click', () => {
-            loadHeavyModalPhoto(ac);
             const key = ac.hex || ac.r || ac.flight;
             if (key) showAircraft(ac, key);
           });
           heaviesListContainer.appendChild(chip);
         });
-
-        if (heaviesModal.classList.contains('active')) {
-          loadHeavyModalPhoto(heavies[0]);
-        }
       } else {
         heaviesListContainer.innerHTML = '<div style="color:#64748b; font-size:11px; text-align:center; padding:10px;">No hay heavies volando cerca</div>';
-        if (heaviesModal.classList.contains('active')) {
-          loadHeavyModalPhoto(null);
-        }
       }
     }
 
@@ -1440,75 +1695,6 @@
       if (selectedKey && markerByKey.has(selectedKey) && flightPanel.classList.contains('visible')) {
         updateFlightDetails(markerByKey.get(selectedKey).aircraft);
       }
-    }
-
-    // Consulta de fotos multi-proxy idéntica al sistema ultrarrápido
-    async function getPhoto(hex, registration, type) {
-      if (!hex) return null;
-      if (photoCache.has(hex)) return photoCache.get(hex);
-
-      const cleanHex = String(hex).trim().toLowerCase();
-      const cleanReg = registration && registration !== 'N/A' ? String(registration).trim() : '';
-
-      const baseUrls = [
-        `https://api.planespotters.net/pub/photos/hex/${cleanHex}`
-      ];
-      if (cleanReg) {
-        baseUrls.push(`https://api.planespotters.net/pub/photos/reg/${cleanReg}`);
-      }
-
-      const endpoints = [];
-      baseUrls.forEach(url => {
-        endpoints.push(url);
-        endpoints.push(`https://corsproxy.io/?${encodeURIComponent(url)}`);
-        endpoints.push(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-      });
-
-      return new Promise((resolve) => {
-        let completed = false;
-        let failedCount = 0;
-        const controllers = [];
-
-        endpoints.forEach((url) => {
-          const controller = new AbortController();
-          controllers.push(controller);
-
-          const timer = setTimeout(() => controller.abort(), 4000);
-
-          fetch(url, { signal: controller.signal })
-            .then(async (res) => {
-              if (!res.ok) throw new Error('HTTP Error');
-              let json;
-              if (url.includes('allorigins')) {
-                const raw = await res.json();
-                json = JSON.parse(raw.contents);
-              } else {
-                json = await res.json();
-              }
-
-              const photo = json?.photos?.[0] || null;
-              if (photo && photo.thumbnail) {
-                if (!completed) {
-                  completed = true;
-                  controllers.forEach(c => c.abort());
-                  clearTimeout(timer);
-                  photoCache.set(hex, photo);
-                  resolve(photo);
-                }
-              } else {
-                throw new Error('Sin foto');
-              }
-            })
-            .catch(() => {
-              clearTimeout(timer);
-              failedCount++;
-              if (failedCount === endpoints.length && !completed) {
-                photoCache.set(hex, null);
-                resolve(null);
-              }
-            });
-        });
-      });
     }
 
     function updateFlightDetails(aircraft) {
@@ -1598,54 +1784,63 @@
       document.getElementById('fr24-hex').textContent = hex;
       document.getElementById('fr24-age').textContent = ageText;
       document.getElementById('fr24-distance').textContent = distanceText;
+
+      // DATO DENTRO DEL WIDGET MULTIFUNCIÓN
+      // MODO 1: Radar
+      const arrowElem = document.getElementById('radar-heading-arrow');
+      const labelElem = document.getElementById('radar-label');
+      const heading = Number(aircraft.track) || 0;
+      arrowElem.style.transform = `rotate(${heading}deg)`;
+      labelElem.textContent = `TRK ${Math.round(heading).toString().padStart(3, '0')}°`;
+
+      // MODO 2: Squawk & Transpondedor Color
+      const squawkDisp = document.getElementById('squawk-code-disp');
+      const squawkStateDisp = document.getElementById('squawk-state-disp');
+      squawkDisp.textContent = squawk;
+      squawkStateDisp.textContent = statusState;
+
+      if (['7700', '7600', '7500', '7777'].includes(squawk)) {
+        squawkDisp.style.color = '#ef4444';
+        squawkStateDisp.style.background = 'rgba(239, 68, 68, 0.2)';
+        squawkStateDisp.style.color = '#ef4444';
+      } else {
+        squawkDisp.style.color = statusColor;
+        squawkStateDisp.style.background = 'rgba(255, 255, 255, 0.08)';
+        squawkStateDisp.style.color = '#cbd5e1';
+      }
+
+      // MODO 3: Ficha Técnica
+      document.getElementById('tech-engine-type').textContent = type;
+      document.getElementById('tech-wake-cat').textContent = `WAKE: ${getWakeTurbulence(aircraft)}`;
+      document.getElementById('tech-country-hex').textContent = `ICAO: ${hex}`;
+
+      // MODO 4: Enlaces Externos
+      const cleanReg = reg.replace(/[^A-Z0-9-]/g, '');
+      document.getElementById('ext-planespotters-btn').href = `https://www.planespotters.net/search?q=${encodeURIComponent(cleanReg)}`;
+      document.getElementById('ext-jetphotos-btn').href = `https://www.jetphotos.com/showphotos.php?aircraft=all&airline=all&country-location=all&photographer-name=all&category=all&keywords-type=reg&keywords-contain=version&keywords=${encodeURIComponent(cleanReg)}`;
     }
 
-    async function showAircraft(aircraft, key) {
+    /* CONMUTADOR DE MODOS AL DAR CLIC EN EL WIDGET */
+    document.getElementById('interactive-widget').addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') return; // no interferir con clics de enlaces externos
+
+      currentWidgetMode = (currentWidgetMode % 4) + 1;
+      document.getElementById('widget-mode-tag').textContent = `MODO ${currentWidgetMode}/4`;
+
+      document.querySelectorAll('.widget-mode-box').forEach((box, index) => {
+        box.classList.toggle('active', (index + 1) === currentWidgetMode);
+      });
+    });
+
+    function showAircraft(aircraft, key) {
+      airportPanel.classList.remove('visible');
       selectedKey = key;
       updateSelectionVisuals();
 
-      const requestId = ++selectedRequestId;
+      selectedRequestId++;
       flightPanel.classList.add('visible');
 
       updateFlightDetails(aircraft);
-
-      const photoElement = document.getElementById('flight-photo');
-      photoElement.style.display = 'none';
-      photoElement.removeAttribute('src');
-      document.getElementById('photo-credit').textContent = '';
-
-      if (isTower(aircraft)) {
-        document.getElementById('photo-message').textContent = 'Estación de tierra';
-        return;
-      }
-
-      document.getElementById('photo-message').textContent = 'Cargando foto…';
-
-      const photo = await getPhoto(aircraft.hex, aircraft.r, aircraft.t);
-
-      if (selectedKey !== key || requestId !== selectedRequestId) return;
-
-      const imgSrc = photo?.thumbnail_large?.src || photo?.thumbnail?.src;
-
-      if (imgSrc) {
-        photoElement.onload = () => {
-          if (selectedKey === key && requestId === selectedRequestId) {
-            photoElement.style.display = 'block';
-            document.getElementById('photo-message').textContent = '';
-          }
-        };
-        photoElement.onerror = () => {
-          if (selectedKey === key && requestId === selectedRequestId) {
-            photoElement.style.display = 'none';
-            document.getElementById('photo-message').textContent = 'Sin foto disponible';
-          }
-        };
-        photoElement.src = imgSrc;
-        document.getElementById('photo-credit').textContent = `© ${photo.photographer || 'Planespotters.net'}`;
-      } else {
-        photoElement.style.display = 'none';
-        document.getElementById('photo-message').textContent = 'Sin foto disponible';
-      }
     }
 
     document.getElementById('close-panel').addEventListener('click', () => {
@@ -1653,6 +1848,10 @@
       selectedKey = null;
       selectedRequestId++;
       updateSelectionVisuals();
+    });
+
+    airportPanelClose.addEventListener('click', () => {
+      airportPanel.classList.remove('visible');
     });
 
     heaviesModalClose.addEventListener('click', () => {
@@ -1677,6 +1876,7 @@
       centerRing.setLatLng([airport.lat, airport.lon]);
 
       flightPanel.classList.remove('visible');
+      airportPanel.classList.remove('visible');
       heaviesModal.classList.remove('active');
       selectedKey = null;
       selectedRequestId++;
@@ -1875,15 +2075,10 @@
       heaviesButton.setAttribute('aria-pressed', String(heaviesOnly));
       
       heaviesModal.classList.toggle('active', heaviesOnly);
-      
-      if (heaviesOnly) {
-        const heavies = latestAircraft.filter(ac => isHeavy(ac));
-        loadHeavyModalPhoto(heavies[0] || null);
-      }
-      
       renderAircraft();
     });
 
+    renderAirportTowers();
     loadFlights(true);
     requestAnimationFrame(animateAircraft);
     window.addEventListener('load', animateHeaderScrollHint);
