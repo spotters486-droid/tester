@@ -1,0 +1,9 @@
+Para usar el radar en AppServ:
+
+1. Copia radar_trafico.html y aviones.php juntos en C:\AppServ\www\gg\.
+2. Abre http://localhost/gg/radar_trafico.html.
+3. Comprueba el intermediario en http://localhost/gg/aviones.php?lat=41.2974&lon=2.0833&dist=250. Debe aparecer una respuesta JSON con "ac" o "aircraft".
+
+Si aparece un mensaje sobre cURL o allow_url_fopen, activa cURL en la configuración PHP de AppServ y reinicia Apache.
+
+La página ahora solicita los datos ADS-B al PHP del mismo sitio; PHP consulta las fuentes desde el servidor y devuelve el JSON al navegador. Para una APK que incluya la página dentro de assets, el endpoint PHP debe estar publicado en un servidor accesible desde el teléfono o sustituido por una consulta nativa Android. Copiar el archivo PHP dentro de assets no hace que Android lo ejecute.
